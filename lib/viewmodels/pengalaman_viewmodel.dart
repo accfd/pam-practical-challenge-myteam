@@ -4,46 +4,80 @@ import '../models/pengalaman_model.dart';
 /// ==============================================================================
 /// LAPISAN: BUSINESS LOGIC LAYER (VIEWMODEL)
 /// ==============================================================================
-/// Mengelola state riwayat pengalaman, logika bisnis, dan aturan validasi aplikasi.
-/// Sesuai pola arsitektur MVVM (Modul 3 Slide 18 & Section 3: "Tugas: Mengelola state, memfilter data, validasi alur").
+/// [Business Logic Layer / ViewModel]:
+/// Lapisan perantara cerdas dalam arsitektur MVVM (Modul 3 Slide 18 & Section 3).
+/// Tugas utamanya:
+/// 1. Mengelola [State] (status dan kumpulan data aplikasi yang sedang aktif).
+/// 2. Mengolah logika bisnis (menambah data, menyaring, dsb).
+/// 3. Memegang aturan validasi data aplikasi.
 ///
-/// Menerapkan ChangeNotifier murni bawaan Flutter tanpa package eksternal,
-/// selaras dengan arahan Modul 4 Slide 10: "focus on local interactive state before introducing state-management packages".
+/// Keuntungan memisahkan ViewModel dari View (Layar UI):
+/// - Tampilan layar (View) menjadi bersih (hanya fokus menggambar antarmuka).
+/// - Logika bisnis mudah diuji secara otomatis ([Unit-Testable]) tanpa perlu emulator.
+///
+/// [ChangeNotifier]:
+/// Class bawaan resmi Flutter yang bekerja seperti "menara pemancar" atau "lonceng pengumuman"
+/// (menerapkan pola desain Observer Pattern). Setiap kali data di ViewModel berubah,
+/// kita cukup membunyikan lonceng (memanggil notifyListeners()), dan semua widget UI
+/// yang terhubung akan otomatis mengetahui lalu memperbarui tampilannya.
+///
+/// Hal ini selaras dengan arahan Modul 4 Slide 10:
+/// "Focus on local interactive state before introducing state-management packages"
+/// (Memanfaatkan fitur asli bawaan Flutter tanpa ketergantungan library luar).
 class PengalamanViewModel extends ChangeNotifier {
-  // State Privat: Menampung kumpulan data pengalaman di memori lokal (Enkapsulasi OOP - Modul 2 Slide 20)
+  /// [State Privat & Enkapsulasi (Encapsulation)]:
+  /// Prinsip Pemrograman Berorientasi Objek (OOP) untuk menyembunyikan data internal
+  /// dengan awalan garis bawah '_' (Modul 2 Slide 20).
+  /// List ini disimpan di memori lokal RAM perangkat selama aplikasi aktif.
+  /// Karena berstatus 'private', layar luar tidak bisa seenaknya mengubah data ini
+  /// tanpa melalui method resmi yang kita sediakan.
   final List<PengalamanModel> _listPengalaman = [];
 
-  /// Getter List yang bersifat Unmodifiable (Read-Only) dari luar class.
-  /// Mencegah manipulasi state langsung tanpa melalui method resmi ViewModel.
+  /// [Unmodifiable List (Read-Only)]:
+  /// Mengembalikan daftar yang "dikunci" agar hanya bisa dibaca (read-only) oleh pihak luar.
+  /// Jika ada kode luar yang mencoba memanggil `_listPengalaman.add(...)` secara ilegal,
+  /// sistem akan menolaknya. Ini menjamin keamanan integritas data aplikasi.
   List<PengalamanModel> get listPengalaman => List.unmodifiable(_listPengalaman);
 
-  /// Getter daftar nama kegiatan (lowercase) untuk diteruskan ke layar form (Modul 4 Slide 28: Data Passing)
-  /// Digunakan oleh form untuk memvalidasi agar tidak terjadi duplikasi entri data.
+  /// [Data Passing Preparation]:
+  /// Getter pembantu untuk mengambil daftar nama kegiatan yang sudah terdaftar dalam bentuk
+  /// huruf kecil (lowercase). Data ini nantinya dikirimkan (Forward Data Passing - Modul 4 Slide 28)
+  /// ke layar form untuk keperluan validasi anti-duplikasi entri nama kegiatan.
   List<String> get daftarNamaKegiatan =>
       _listPengalaman.map((item) => item.namaKegiatan.toLowerCase().trim()).toList();
 
-  /// Getter pembantu untuk memeriksa apakah data masih kosong (Empty State evaluation)
+  /// Getter untuk mengecek kondisi kosong ([Empty State Evaluation]).
+  /// Bernilai true jika belum ada satupun pengalaman yang tersimpan.
   bool get isEmpty => _listPengalaman.isEmpty;
 
-  /// Getter untuk menghitung total pengalaman yang telah tersimpan
+  /// Getter untuk menghitung jumlah total riwayat pengalaman yang tersimpan di memori.
   int get totalPengalaman => _listPengalaman.length;
 
-  /// Aksi Bisnis: Menambahkan data pengalaman baru ke dalam state.
-  /// Memanggil notifyListeners() untuk mengumumkan perubahan data ke View (UI).
+  /// [Aksi Bisnis: Tambah Pengalaman]:
+  /// Menambahkan entitas objek PengalamanModel baru ke dalam state privat.
   void tambahPengalaman(PengalamanModel pengalaman) {
     _listPengalaman.add(pengalaman);
 
-    // Memberitahu seluruh widget pendengar (ListenableBuilder) agar merender ulang UI (Modul 4 Slide 10-11)
+    /// [notifyListeners()]:
+    /// Membunyikan "lonceng" notifikasi kepada semua widget UI yang sedang mendengarkan
+    /// (seperti ListenableBuilder di layar utama).
+    /// Begitu mendengar notifikasi ini, Flutter secara cerdas akan menggambar ulang (rebuild)
+    /// tampilan antarmuka sehingga kartu pengalaman yang baru langsung muncul di layar.
     notifyListeners();
   }
 
   // ==============================================================================
   // ATURAN VALIDASI BISNIS (BUSINESS RULES VALIDATION - MODUL 3 SECTION 3)
   // ==============================================================================
-  // Menempatkan fungsi aturan validasi di ViewModel memisahkan logika dari widget UI,
-  // sehingga aturan bisnis dapat diuji secara mandiri (unit-testable) tanpa ketergantungan UI.
+  // Meletakkan fungsi validasi di dalam ViewModel (bukan di dalam widget tampilan)
+  // membuat aturan bisnis berstatus [Unit-Testable], artinya dapat diuji kebenarannya
+  // menggunakan file pengujian otomatis (automated unit test) tanpa perlu menjalankan emulator.
 
-  /// Validasi Aturan Nama Kegiatan: Wajib diisi, minimal 3 karakter, dan anti-duplikasi.
+  /// [Validasi Nama Kegiatan]:
+  /// Menerapkan 3 lapis aturan:
+  /// 1. Required (Wajib diisi): Tidak boleh bernilai null atau spasi kosong.
+  /// 2. Min Length (Panjang Minimal): Minimal 3 karakter agar nama kegiatan bermakna.
+  /// 3. Anti-Duplikasi: Memeriksa apakah kegiatan tersebut sudah pernah didaftarkan sebelumnya.
   static String? validasiNamaKegiatan(String? value, {List<String> terdaftar = const []}) {
     if (value == null || value.trim().isEmpty) {
       return 'Nama kegiatan wajib diisi!';
@@ -55,10 +89,11 @@ class PengalamanViewModel extends ChangeNotifier {
     if (terdaftar.contains(namaKecil)) {
       return 'Kegiatan "$value" sudah terdaftar di portofolio!';
     }
-    return null; // Valid
+    return null; // Mengembalikan null berarti data VALID (lolos seleksi)
   }
 
-  /// Validasi Aturan Peran: Wajib diisi (Required).
+  /// [Validasi Peran]:
+  /// Aturan wajib diisi (Required) untuk memastikan posisi/peran mahasiswa jelas.
   static String? validasiPeran(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Peran wajib diisi!';
@@ -66,7 +101,13 @@ class PengalamanViewModel extends ChangeNotifier {
     return null; // Valid
   }
 
-  /// Validasi Aturan Tahun: Wajib diisi, format integer numerik, rentang logis 2000-2026.
+  /// [Validasi Tahun Pelaksanaan]:
+  /// Menerapkan validasi bertingkat ([Multi-Tier Validation]):
+  /// 1. Keberadaan teks: Wajib diisi (tidak boleh kosong).
+  /// 2. [Safe Numeric Parsing / tryParse]: Menguji apakah teks benar-benar angka bulat murni
+  ///    tanpa memicu error/crash aplikasi jika pengguna mengetik huruf.
+  /// 3. Logical Range (Rentang Logis): Angka tahun harus berada di antara 2000 hingga 2026
+  ///    (menolak tahun yang mustahil seperti tahun 1800 atau tahun 2099).
   static String? validasiTahun(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Tahun wajib diisi!';
