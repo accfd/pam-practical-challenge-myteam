@@ -4,8 +4,8 @@ import '../models/pengalaman_model.dart';
 /// ==============================================================================
 /// LAPISAN: BUSINESS LOGIC LAYER (VIEWMODEL)
 /// ==============================================================================
-/// Mengelola state riwayat pengalaman dan mengoordinasikan aksi bisnis aplikasi.
-/// Sesuai pola arsitektur MVVM (Modul 3 Slide 18: ViewModel manages UI-related state & coordinates actions).
+/// Mengelola state riwayat pengalaman, logika bisnis, dan aturan validasi aplikasi.
+/// Sesuai pola arsitektur MVVM (Modul 3 Slide 18 & Section 3: "Tugas: Mengelola state, memfilter data, validasi alur").
 ///
 /// Menerapkan ChangeNotifier murni bawaan Flutter tanpa package eksternal,
 /// selaras dengan arahan Modul 4 Slide 10: "focus on local interactive state before introducing state-management packages".
@@ -35,5 +35,49 @@ class PengalamanViewModel extends ChangeNotifier {
 
     // Memberitahu seluruh widget pendengar (ListenableBuilder) agar merender ulang UI (Modul 4 Slide 10-11)
     notifyListeners();
+  }
+
+  // ==============================================================================
+  // ATURAN VALIDASI BISNIS (BUSINESS RULES VALIDATION - MODUL 3 SECTION 3)
+  // ==============================================================================
+  // Menempatkan fungsi aturan validasi di ViewModel memisahkan logika dari widget UI,
+  // sehingga aturan bisnis dapat diuji secara mandiri (unit-testable) tanpa ketergantungan UI.
+
+  /// Validasi Aturan Nama Kegiatan: Wajib diisi, minimal 3 karakter, dan anti-duplikasi.
+  static String? validasiNamaKegiatan(String? value, {List<String> terdaftar = const []}) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Nama kegiatan wajib diisi!';
+    }
+    if (value.trim().length < 3) {
+      return 'Nama kegiatan minimal 3 karakter!';
+    }
+    final namaKecil = value.trim().toLowerCase();
+    if (terdaftar.contains(namaKecil)) {
+      return 'Kegiatan "$value" sudah terdaftar di portofolio!';
+    }
+    return null; // Valid
+  }
+
+  /// Validasi Aturan Peran: Wajib diisi (Required).
+  static String? validasiPeran(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Peran wajib diisi!';
+    }
+    return null; // Valid
+  }
+
+  /// Validasi Aturan Tahun: Wajib diisi, format integer numerik, rentang logis 2000-2026.
+  static String? validasiTahun(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Tahun wajib diisi!';
+    }
+    final int? tahun = int.tryParse(value.trim());
+    if (tahun == null) {
+      return 'Tahun harus berupa angka valid!';
+    }
+    if (tahun < 2000 || tahun > 2026) {
+      return 'Masukkan tahun antara 2000 - 2026!';
+    }
+    return null; // Valid
   }
 }

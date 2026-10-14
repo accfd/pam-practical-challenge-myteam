@@ -1,9 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:myteam_app/main.dart';
+import 'package:myteam_app/viewmodels/pengalaman_viewmodel.dart';
 
 void main() {
-  testWidgets('Workflow Lengkap: Empty State -> Tambah Pengalaman -> Validasi -> Loading -> Sukses -> Render Kartu Baru',
+  group('Unit Test: Validasi Bisnis di PengalamanViewModel (MVVM)', () {
+    test('Validasi Nama Kegiatan: Wajib diisi, min 3 karakter, dan anti-duplikasi', () {
+      expect(PengalamanViewModel.validasiNamaKegiatan(null), 'Nama kegiatan wajib diisi!');
+      expect(PengalamanViewModel.validasiNamaKegiatan('   '), 'Nama kegiatan wajib diisi!');
+      expect(PengalamanViewModel.validasiNamaKegiatan('PI'), 'Nama kegiatan minimal 3 karakter!');
+      expect(
+        PengalamanViewModel.validasiNamaKegiatan('PIMNAS', terdaftar: ['pimnas']),
+        'Kegiatan "PIMNAS" sudah terdaftar di portofolio!',
+      );
+      expect(PengalamanViewModel.validasiNamaKegiatan('Gemastik', terdaftar: ['pimnas']), isNull);
+    });
+
+    test('Validasi Peran: Wajib diisi', () {
+      expect(PengalamanViewModel.validasiPeran(null), 'Peran wajib diisi!');
+      expect(PengalamanViewModel.validasiPeran(''), 'Peran wajib diisi!');
+      expect(PengalamanViewModel.validasiPeran('Ketua Tim'), isNull);
+    });
+
+    test('Validasi Tahun: Wajib diisi, angka valid, dan batas 2000-2026', () {
+      expect(PengalamanViewModel.validasiTahun(null), 'Tahun wajib diisi!');
+      expect(PengalamanViewModel.validasiTahun('bukan_angka'), 'Tahun harus berupa angka valid!');
+      expect(PengalamanViewModel.validasiTahun('1999'), 'Masukkan tahun antara 2000 - 2026!');
+      expect(PengalamanViewModel.validasiTahun('2027'), 'Masukkan tahun antara 2000 - 2026!');
+      expect(PengalamanViewModel.validasiTahun('2024'), isNull);
+    });
+  });
+
+  testWidgets('Widget Test Workflow: Empty State -> Tambah Pengalaman -> Validasi -> Loading -> Sukses -> Render Kartu Baru',
       (WidgetTester tester) async {
     // 1. Build app and verify initial empty state
     await tester.pumpWidget(const MyTeamApp());

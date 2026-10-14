@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/pengalaman_model.dart';
+import '../viewmodels/pengalaman_viewmodel.dart';
 
 /// ==============================================================================
 /// LAPISAN: PRESENTATION LAYER (VIEW 2 - FORM TAMBAH PENGALAMAN)
@@ -210,20 +211,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     hintText: 'Masukkan nama kegiatan / lomba',
                     icon: Icons.emoji_events_outlined,
                   ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Nama kegiatan wajib diisi!';
-                    }
-                    if (value.trim().length < 3) {
-                      return 'Nama kegiatan minimal 3 karakter!';
-                    }
-                    // VALIDASI ANTI-DUPLIKASI (Memanfaatkan data yang dikirim dari Screen 1)
-                    final namaKecil = value.trim().toLowerCase();
-                    if (widget.kegiatanTerdaftar.contains(namaKecil)) {
-                      return 'Kegiatan "$value" sudah terdaftar di portofolio!';
-                    }
-                    return null; // Input valid
-                  },
+                  // Delegasi aturan validasi bisnis ke ViewModel (Modul 3 Section 3)
+                  validator: (value) => PengalamanViewModel.validasiNamaKegiatan(
+                    value,
+                    terdaftar: widget.kegiatanTerdaftar,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -240,12 +232,8 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     hintText: 'Masukkan peran atau posisi',
                     icon: Icons.badge_outlined,
                   ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Peran wajib diisi!';
-                    }
-                    return null;
-                  },
+                  // Delegasi aturan validasi peran ke ViewModel (Modul 3 Section 3)
+                  validator: PengalamanViewModel.validasiPeran,
                 ),
                 const SizedBox(height: 16),
 
@@ -263,19 +251,8 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     hintText: 'Contoh: 2026',
                     icon: Icons.calendar_today_outlined,
                   ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Tahun wajib diisi!';
-                    }
-                    final int? tahun = int.tryParse(value.trim());
-                    if (tahun == null) {
-                      return 'Tahun harus berupa angka valid!';
-                    }
-                    if (tahun < 2000 || tahun > 2026) {
-                      return 'Masukkan tahun antara 2000 - 2026!';
-                    }
-                    return null;
-                  },
+                  // Delegasi aturan validasi tahun ke ViewModel (Modul 3 Section 3)
+                  validator: PengalamanViewModel.validasiTahun,
                 ),
                 const SizedBox(height: 16),
 
