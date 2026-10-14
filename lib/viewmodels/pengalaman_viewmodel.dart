@@ -17,6 +17,11 @@ class PengalamanViewModel extends ChangeNotifier {
   /// Mencegah manipulasi state langsung tanpa melalui method resmi ViewModel.
   List<PengalamanModel> get listPengalaman => List.unmodifiable(_listPengalaman);
 
+  /// Getter daftar nama kegiatan (lowercase) untuk diteruskan ke layar form (Modul 4 Slide 28: Data Passing)
+  /// Digunakan oleh form untuk memvalidasi agar tidak terjadi duplikasi entri data.
+  List<String> get daftarNamaKegiatan =>
+      _listPengalaman.map((item) => item.namaKegiatan.toLowerCase().trim()).toList();
+
   /// Getter pembantu untuk memeriksa apakah data masih kosong (Empty State evaluation)
   bool get isEmpty => _listPengalaman.isEmpty;
 

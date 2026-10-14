@@ -26,20 +26,47 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
     super.dispose();
   }
 
-  /// WORKFLOW TAHAP 1: INPUT / EVENT
-  /// Aksi pengguna saat menekan tombol "Tambah Pengalaman".
+  /// WORKFLOW TAHAP 1 & 5: EVENT, DATA PASSING FORWARD & NAVIGATION RESULT
   /// Memicu perpindahan halaman via Navigator.push() dengan generic type <PengalamanModel> (Modul 4 Slide 28).
+  /// Meneruskan data yang sudah ada (daftar nama kegiatan) ke layar form untuk validasi anti-duplikasi.
   void _navigateToAddScreen() async {
-    // Membuka TambahPengalamanScreen dan menunggu (await) nilai kembalian saat layar tersebut di-pop
     final result = await Navigator.push<PengalamanModel>(
       context,
-      MaterialPageRoute(builder: (ctx) => const TambahPengalamanScreen()),
+      MaterialPageRoute(
+        builder: (ctx) => TambahPengalamanScreen(
+          // DATA PASSING KE DEPAN: Meneruskan data nama kegiatan terdaftar ke TambahPengalamanScreen
+          kegiatanTerdaftar: _viewModel.daftarNamaKegiatan,
+        ),
+      ),
     );
 
+    if (!mounted) return;
+
     // WORKFLOW TAHAP 5: NAVIGATION / RESULT
-    // Jika user menyimpan data (result != null), data diteruskan ke ViewModel untuk memutasi state (Modul 4 Slide 29)
+    // 1. Kondisi Sukses Menyimpan Data (result != null)
     if (result != null) {
       _viewModel.tambahPengalaman(result);
+
+      // Feedback SnackBar konfirmasi penambahan sukses di halaman utama
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Berhasil menambahkan "${result.namaKegiatan}" ke portofolio!'),
+          backgroundColor: const Color(0xFF006400),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+    }
+    // 2. Kondisi Batal / User Kembali Tanpa Simpan (result == null)
+    else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Penambahan pengalaman dibatalkan'),
+          backgroundColor: Colors.grey.shade700,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
     }
   }
 
