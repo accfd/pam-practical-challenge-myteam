@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/pengalaman_model.dart';
 
+/// ==============================================================================
+/// LAPISAN: PRESENTATION LAYER (VIEW 2 - FORM TAMBAH PENGALAMAN)
+/// ==============================================================================
+/// Layar form interaktif untuk menangkap input riwayat kegiatan mahasiswa.
+/// Mengimplementasikan validasi input berlapis, feedback modal, dan pengembalian data (Modul 4).
 class TambahPengalamanScreen extends StatefulWidget {
   const TambahPengalamanScreen({super.key});
 
@@ -9,10 +14,12 @@ class TambahPengalamanScreen extends StatefulWidget {
 }
 
 class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
-  // Key untuk kontrol dan validasi Form (Modul 4 Slide 16)
+  /// WORKFLOW TAHAP 2: STATE MANAGEMENT (FORM STATE)
+  /// GlobalKey bertindak sebagai pengidentifikasi unik dan pengendali FormState (Modul 4 Slide 16).
+  /// Memungkinkan eksekusi method validate() dan save() secara menyeluruh pada semua TextFormField anak.
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers untuk menangkap teks input pengguna (Modul 4 Slide 8)
+  /// TextEditingController: Mendengarkan dan mengontrol isi teks yang dimasukkan pengguna (Modul 4 Slide 8).
   final _namaController = TextEditingController();
   final _peranController = TextEditingController();
   final _tahunController = TextEditingController();
@@ -20,7 +27,8 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
 
   @override
   void dispose() {
-    // Membebaskan memori controller saat layar ditutup (Modul 4 Slide 8)
+    /// PEMBERSIHAN MEMORI (MEMORY LEAK PREVENTION)
+    /// Seluruh controller WAJIB di-dispose saat widget dihancurkan dari widget tree (Modul 4 Slide 8).
     _namaController.dispose();
     _peranController.dispose();
     _tahunController.dispose();
@@ -28,10 +36,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     super.dispose();
   }
 
+  /// WORKFLOW TAHAP 1 & 3: EVENT SUBMIT & VALIDATION LOGIC
   void _submitForm() {
-    // Stage 3: Validation (Modul 4 Slide 16 & 22)
+    // Memeriksa validasi seluruh field form secara serentak (Modul 4 Slide 16 & 22)
     if (_formKey.currentState!.validate()) {
-      // Membungkus input ke dalam objek model
+      // Membersihkan whitespace dengan .trim() dan membungkus input ke dalam objek strongly-typed (Modul 3 Slide 16)
       final newPengalaman = PengalamanModel(
         namaKegiatan: _namaController.text.trim(),
         peran: _peranController.text.trim(),
@@ -39,9 +48,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
         deskripsi: _deskripsiController.text.trim(),
       );
 
-      // Stage 4: Feedback Dialog (Modul 4 Slide 20 & 21)
+      // WORKFLOW TAHAP 4: FEEDBACK MECHANISM (SUCCESS DIALOG)
+      // Menampilkan dialog modal konfirmasi interaktif saat validasi berhasil (Modul 4 Slide 20)
       showDialog(
         context: context,
+        // Mencegah penutupan dialog secara tidak sengaja di luar area modal
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
           shape: RoundedRectangleBorder(
@@ -51,6 +62,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
+              // Ikon centang hijau sukses beranimasi visual
               Container(
                 width: 64,
                 height: 64,
@@ -74,6 +86,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 ),
               ),
               const SizedBox(height: 24),
+              // Tombol konfirmasi untuk menutup dialog dan kembali ke layar daftar
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -86,8 +99,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.pop(ctx); // Tutup Dialog Feedback
-                    // Stage 5: Navigation Result (Modul 4 Slide 29)
+                    // Menutup popup dialog terlebih dahulu
+                    Navigator.pop(ctx);
+
+                    // WORKFLOW TAHAP 5: NAVIGATION / RESULT (Modul 4 Slide 29)
+                    // Mengirimkan objek newPengalaman kembali ke layar pemanggil (DaftarPengalamanScreen)
                     Navigator.pop(context, newPengalaman);
                   },
                   child: const Text(
@@ -115,6 +131,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
+          // Navigasi mundur membatalkan pengisian tanpa mengirimkan data
           onPressed: () => Navigator.pop(context),
         ),
         title: const Column(
@@ -154,7 +171,9 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // 1. Field Nama Kegiatan
+                // ==============================================================================
+                // 1. FIELD NAMA KEGIATAN (Wajib Diisi)
+                // ==============================================================================
                 const Text('Nama Kegiatan',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -165,15 +184,18 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     icon: Icons.emoji_events_outlined,
                   ),
                   validator: (value) {
+                    // Validasi: Tidak boleh kosong atau hanya berupa spasi (Modul 4 Slide 18)
                     if (value == null || value.trim().isEmpty) {
                       return 'Nama kegiatan wajib diisi!';
                     }
-                    return null;
+                    return null; // Input valid
                   },
                 ),
                 const SizedBox(height: 16),
 
-                // 2. Field Peran
+                // ==============================================================================
+                // 2. FIELD PERAN (Wajib Diisi)
+                // ==============================================================================
                 const Text('Peran',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -184,15 +206,18 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     icon: Icons.badge_outlined,
                   ),
                   validator: (value) {
+                    // Validasi: Peran wajib diisi (Modul 4 Slide 18)
                     if (value == null || value.trim().isEmpty) {
                       return 'Peran wajib diisi!';
                     }
-                    return null;
+                    return null; // Input valid
                   },
                 ),
                 const SizedBox(height: 16),
 
-                // 3. Field Tahun Pelaksanaan
+                // ==============================================================================
+                // 3. FIELD TAHUN PELAKSANAAN (Validasi Multi-Tier: Required + Numerik + Rentang)
+                // ==============================================================================
                 const Text('Tahun Pelaksanaan',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -204,22 +229,27 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     icon: Icons.calendar_today_outlined,
                   ),
                   validator: (value) {
+                    // Lapisan 1: Pengecekan input kosong
                     if (value == null || value.trim().isEmpty) {
                       return 'Tahun wajib diisi!';
                     }
+                    // Lapisan 2: Pengecekan tipe data integer numerik (Modul 4 Slide 7)
                     final int? tahun = int.tryParse(value.trim());
                     if (tahun == null) {
                       return 'Tahun harus berupa angka valid!';
                     }
+                    // Lapisan 3: Pengecekan rentang batas logis tahun kegiatan mahasiswa
                     if (tahun < 2000 || tahun > 2026) {
                       return 'Masukkan tahun antara 2000 - 2026!';
                     }
-                    return null;
+                    return null; // Input valid
                   },
                 ),
                 const SizedBox(height: 16),
 
-                // 4. Field Deskripsi Kontribusi
+                // ==============================================================================
+                // 4. FIELD DESKRIPSI KONTRIBUSI (Field Opsional)
+                // ==============================================================================
                 const Text('Deskripsi Kontribusi',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -245,7 +275,9 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Tombol Simpan Pengalaman
+                // ==============================================================================
+                // TOMBOL SUBMIT FORM
+                // ==============================================================================
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -275,6 +307,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     );
   }
 
+  /// Helper untuk styling dekorasi input form dengan indikator error visual (Modul 4 Slide 18)
   InputDecoration _buildInputDecoration({
     required String hintText,
     required IconData icon,
@@ -294,6 +327,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
       ),
+      // WORKFLOW TAHAP 4: ERROR VISUAL FEEDBACK (Border merah saat input invalid)
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Colors.red),

@@ -1,24 +1,34 @@
 import 'package:flutter/foundation.dart';
 import '../models/pengalaman_model.dart';
 
-/// ViewModel untuk mengelola state dan logika bisnis fitur Pengalaman Mahasiswa.
-/// Mengimplementasikan pola arsitektur MVVM (Modul 3 Slide 18).
-/// Menggunakan ChangeNotifier murni bawaan Flutter tanpa package eksternal (Modul 4 Slide 10).
+/// ==============================================================================
+/// LAPISAN: BUSINESS LOGIC LAYER (VIEWMODEL)
+/// ==============================================================================
+/// Mengelola state riwayat pengalaman dan mengoordinasikan aksi bisnis aplikasi.
+/// Sesuai pola arsitektur MVVM (Modul 3 Slide 18: ViewModel manages UI-related state & coordinates actions).
+///
+/// Menerapkan ChangeNotifier murni bawaan Flutter tanpa package eksternal,
+/// selaras dengan arahan Modul 4 Slide 10: "focus on local interactive state before introducing state-management packages".
 class PengalamanViewModel extends ChangeNotifier {
-  // State privat: daftar pengalaman mahasiswa
+  // State Privat: Menampung kumpulan data pengalaman di memori lokal (Enkapsulasi OOP - Modul 2 Slide 20)
   final List<PengalamanModel> _listPengalaman = [];
 
-  // Getter unmodifiable untuk melindungi state dari manipulasi langsung dari luar
+  /// Getter List yang bersifat Unmodifiable (Read-Only) dari luar class.
+  /// Mencegah manipulasi state langsung tanpa melalui method resmi ViewModel.
   List<PengalamanModel> get listPengalaman => List.unmodifiable(_listPengalaman);
 
-  // Getter pembantu untuk pengecekan kondisi UI
+  /// Getter pembantu untuk memeriksa apakah data masih kosong (Empty State evaluation)
   bool get isEmpty => _listPengalaman.isEmpty;
+
+  /// Getter untuk menghitung total pengalaman yang telah tersimpan
   int get totalPengalaman => _listPengalaman.length;
 
-  /// Aksi bisnis: Menambahkan pengalaman baru ke state dan memicu notifikasi ke View
+  /// Aksi Bisnis: Menambahkan data pengalaman baru ke dalam state.
+  /// Memanggil notifyListeners() untuk mengumumkan perubahan data ke View (UI).
   void tambahPengalaman(PengalamanModel pengalaman) {
     _listPengalaman.add(pengalaman);
-    // Memberitahu UI (View) agar melakukan rebuild dengan data terbaru
+
+    // Memberitahu seluruh widget pendengar (ListenableBuilder) agar merender ulang UI (Modul 4 Slide 10-11)
     notifyListeners();
   }
 }

@@ -3,9 +3,11 @@ import '../models/pengalaman_model.dart';
 import '../viewmodels/pengalaman_viewmodel.dart';
 import 'tambah_pengalaman_screen.dart';
 
-/// Screen Daftar Pengalaman Mahasiswa.
-/// Bertindak sebagai View (Presentation Layer) dalam arsitektur MVVM (Modul 3 Slide 18).
-/// Menampilkan antarmuka dan mendengarkan perubahan data dari PengalamanViewModel.
+/// ==============================================================================
+/// LAPISAN: PRESENTATION LAYER (VIEW 1 - DAFTAR PENGALAMAN)
+/// ==============================================================================
+/// Layar utama yang bertugas merender antarmuka portofolio pengalaman mahasiswa.
+/// Bertindak sebagai View murni yang mendelegasikan state ke PengalamanViewModel (Modul 3 Slide 18).
 class DaftarPengalamanScreen extends StatefulWidget {
   const DaftarPengalamanScreen({super.key});
 
@@ -14,24 +16,28 @@ class DaftarPengalamanScreen extends StatefulWidget {
 }
 
 class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
-  // Instance ViewModel untuk mengelola state dan data bisnis (MVVM)
+  // Instance ViewModel yang menjadi sumber kebenaran tunggal (Single Source of Truth) untuk data layar ini
   final PengalamanViewModel _viewModel = PengalamanViewModel();
 
   @override
   void dispose() {
-    // Membebaskan sumber daya ViewModel saat widget dilepas (Modul 4 Slide 8)
+    // Membersihkan listener dan memori ViewModel saat layar dihancurkan (Modul 4 Slide 8: Memory Lifecycle)
     _viewModel.dispose();
     super.dispose();
   }
 
+  /// WORKFLOW TAHAP 1: INPUT / EVENT
+  /// Aksi pengguna saat menekan tombol "Tambah Pengalaman".
+  /// Memicu perpindahan halaman via Navigator.push() dengan generic type <PengalamanModel> (Modul 4 Slide 28).
   void _navigateToAddScreen() async {
-    // Stage 1: Event - Pindah Halaman via Navigator.push (Modul 4 Slide 28)
+    // Membuka TambahPengalamanScreen dan menunggu (await) nilai kembalian saat layar tersebut di-pop
     final result = await Navigator.push<PengalamanModel>(
       context,
       MaterialPageRoute(builder: (ctx) => const TambahPengalamanScreen()),
     );
 
-    // Stage 5: Navigation Result - Meneruskan data ke ViewModel (Modul 3 Slide 18 & Modul 4 Slide 29)
+    // WORKFLOW TAHAP 5: NAVIGATION / RESULT
+    // Jika user menyimpan data (result != null), data diteruskan ke ViewModel untuk memutasi state (Modul 4 Slide 29)
     if (result != null) {
       _viewModel.tambahPengalaman(result);
     }
@@ -39,7 +45,8 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ListenableBuilder merender ulang UI secara reaktif saat ViewModel memanggil notifyListeners()
+    // ListenableBuilder: Widget resmi bawaan Flutter untuk mendengarkan ChangeNotifier (ViewModel).
+    // Hanya bagian dalam builder ini yang dirender ulang secara efisien saat notifyListeners() dipanggil.
     return ListenableBuilder(
       listenable: _viewModel,
       builder: (context, _) {
@@ -48,6 +55,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.white,
+            // Layar beranda (root) tidak memerlukan tombol panah kembali
             automaticallyImplyLeading: false,
             title: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,14 +75,19 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
               ],
             ),
           ),
+
+          // Tampilan adaptif: Berpindah otomatis antara Empty State dan Populated List
           body: _viewModel.isEmpty
-              // Tampilan Layar 1: Empty State (Kondisi belum ada data)
+              // ==============================================================================
+              // TAMPILAN 1: EMPTY STATE (Kondisi saat belum ada pengalaman tersimpan)
+              // ==============================================================================
               ? Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // Ikon informatif dengan lingkaran berlatar belakang hijau muda
                         Container(
                           width: 96,
                           height: 96,
@@ -89,6 +102,8 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
+
+                        // Badge status jumlah pengalaman
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 4),
@@ -102,6 +117,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
+
                         const Text(
                           'Belum Ada Pengalaman',
                           style: TextStyle(
@@ -110,12 +126,15 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
+
                         const Text(
                           'Tambahkan riwayat kegiatan, kepanitiaan organisasi, kompetisi, atau riset kampus untuk melengkapi portofolio dan menarik rekan tim terbaik di UNAND.',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.grey, height: 1.4),
                         ),
                         const SizedBox(height: 24),
+
+                        // Tombol pemicu event tambah pengalaman pada kondisi kosong
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
@@ -142,17 +161,21 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                     ),
                   ),
                 )
-              // Tampilan Layar: Result State (Populated Card List)
+              // ==============================================================================
+              // TAMPILAN 2: RESULT STATE (ListView Builder saat data sudah terisi)
+              // ==============================================================================
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: _viewModel.totalPengalaman,
                   itemBuilder: (ctx, index) {
+                    // Mengambil item model dari ViewModel berdasarkan indeks
                     final item = _viewModel.listPengalaman[index];
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
+                        // Aksen garis hijau vertikal di sisi kiri kartu (Identitas Visual UNAND)
                         border: const Border(
                           left: BorderSide(color: Color(0xFF006400), width: 6),
                         ),
@@ -169,6 +192,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // 1. Nama Kegiatan
                             Text(
                               item.namaKegiatan,
                               style: const TextStyle(
@@ -177,6 +201,8 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                               ),
                             ),
                             const SizedBox(height: 8),
+
+                            // 2. Peran / Posisi
                             Row(
                               children: [
                                 const Icon(Icons.badge_outlined,
@@ -192,6 +218,8 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                               ],
                             ),
                             const SizedBox(height: 4),
+
+                            // 3. Tahun Pelaksanaan
                             Row(
                               children: [
                                 const Icon(Icons.calendar_today_outlined,
@@ -203,6 +231,8 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                                 ),
                               ],
                             ),
+
+                            // 4. Deskripsi Kontribusi (Ditampilkan jika pengguna mengisinya)
                             if (item.deskripsi.isNotEmpty) ...[
                               const SizedBox(height: 12),
                               Text(
@@ -219,6 +249,8 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                     );
                   },
                 ),
+
+          // Tombol melayang di bagian bawah saat daftar sudah berisi data
           bottomNavigationBar: !_viewModel.isEmpty
               ? Padding(
                   padding: const EdgeInsets.all(16.0),
