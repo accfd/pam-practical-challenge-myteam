@@ -44,14 +44,26 @@ Duduklah dengan tenang, posisikan layar HP agar dosen bisa melihat jelas, lalu i
 
 ---
 
-### 4. Tahap 3: Validation (Pencegahan Input Salah)
+### 4. Tahap 3: Validation (Pencegahan Input Salah Berlapis)
 * **Aksi di HP:** Jangan isi apapun di form, langsung ketuk tombol hijau **"Simpan Pengalaman"**.
-* **Tampilan di HP:** Muncul garis tepi merah (*errorBorder*) dan teks peringatan merah di bawah tiap field:
-  - *"Nama kegiatan wajib diisi!"*
-  - *"Peran wajib diisi!"*
-  - *"Tahun wajib diisi!"*
+* **Tampilan di HP:** Form langsung terkunci, border berubah menjadi merah mencolok (*errorBorder*), dan teks peringatan error muncul tepat di bawah masing-masing field.
 * **Ucapkan:**
-  > *"Tahap ketiga adalah **Validation**. Jika pengguna langsung menyimpan form kosong, sistem menolaknya secara berlapis: Nama kegiatan wajib minimal 3 karakter, peran wajib diisi, dan tahun pelaksanaan harus berupa angka bulat sah antara rentang tahun 2000 hingga 2026. Selain itu, ada aturan **Anti-Duplikasi Cerdas** yang akan menolak jika kombinasi nama, peran, dan tahun sama persis dengan yang sudah tersimpan."*
+  > *"Tahap ketiga adalah **Validation**. Aplikasi menerapkan aturan validasi berlapis (*Multi-Tier Validation*) yang terpusat di ViewModel. Form menolak input yang tidak memenuhi kriteria dan mengunci proses penyimpanan."*
+
+#### 📊 TABEL LENGKAP ATURAN VALIDASI APLIKASI:
+
+| Field Input | Kriteria / Aturan Bisnis | Skenario Uji (Kondisi Salah) | Respon Visual & Pesan Error | Lokasi Logika Kode |
+|---|---|---|---|---|
+| **Nama Kegiatan** | 1. **Required** (Wajib diisi)<br>2. **Min Length** (Minimal 3 karakter) | • Form dikosongkan / spasi saja<br>• Mengetik kurang dari 3 huruf (misal: `"PI"`) | Border Merah:<br>• `"Nama kegiatan wajib diisi!"`<br>• `"Nama kegiatan minimal 3 karakter!"` | `PengalamanViewModel.validasiNamaKegiatan` |
+| **Peran** | **Required** (Wajib diisi) | • Form dikosongkan / hanya spasi | Border Merah:<br>• `"Peran wajib diisi!"` | `PengalamanViewModel.validasiPeran` |
+| **Tahun Pelaksanaan** | 1. **Required** (Wajib diisi)<br>2. **Numeric Safe Parsing** (`int.tryParse`)<br>3. **Logical Range** ($2000 \le \text{tahun} \le 2026$) | • Form dikosongkan<br>• Mengetik huruf/simbol (misal: `"dua ribu"`)<br>• Mengetik tahun lampau/masa depan (misal: `1998` atau `2035`) | Border Merah:<br>• `"Tahun wajib diisi!"`<br>• `"Tahun harus berupa angka valid!"`<br>• `"Masukkan tahun antara 2000 - 2026!"` | `PengalamanViewModel.validasiTahun` |
+| **Kombinasi Multi-Field** | **Anti-Duplikasi Cerdas**<br>(Kombinasi Nama + Peran + Tahun) | Mengetik data yang **Nama, Peran, dan Tahun ketiganya sama persis** dengan yang sudah ada di daftar. | SnackBar Merah Mengambang:<br>• `"Pengalaman '[Nama]' sebagai '[Peran]' pada tahun [Tahun] sudah ada di daftar!"` | `PengalamanViewModel.isDuplikatKombinasi` |
+| **Deskripsi Kontribusi** | **Opsional** (Nilai boleh kosong) | Boleh dikosongkan jika mahasiswa belum ingin menulis detail. | Input tetap diterima tanpa error. | Validasi Form |
+
+#### 💡 Trik Menjawab Jika Dosen Menguji Kasus Lain:
+* Jika dosen berkata: *"Coba ketik huruf di kolom tahun!"* $\rightarrow$ Tunjukkan bahwa pesan *"Tahun harus berupa angka valid!"* muncul karena kita menggunakan `int.tryParse()`.
+* Jika dosen berkata: *"Coba ketik tahun 1990 atau 2040!"* $\rightarrow$ Tunjukkan bahwa pesan *"Masukkan tahun antara 2000 - 2026!"* muncul karena kita membatasi tahun kuliah yang masuk akal.
+* Jika dosen bertanya: *"Boleh nggak kegiatannya sama?"* $\rightarrow$ Jawab: *"Boleh Pak/Bu, asalkan perannya berbeda (misal naik jabatan dari Anggota jadi Ketua) atau tahunnya berbeda. Yang ditolak hanya jika Nama, Peran, dan Tahun ketiga-tiganya sama persis."*
 
 ---
 
