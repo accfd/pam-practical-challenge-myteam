@@ -21,7 +21,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
   }
 
   void _navigateToAddScreen() async {
-    // 1. Forward passing data ke form tambah
+    // 1. Forward data passing ke form tambah
     final result = await Navigator.push<PengalamanModel>(
       context,
       MaterialPageRoute(
@@ -33,11 +33,15 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
 
     if (!mounted) return;
 
-    // 2. Menerima result dan memperbarui state di ViewModel
+    // 2. Menerima return data dan mutasi state di ViewModel
     if (result != null) {
       _viewModel.tambahPengalaman(result);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Berhasil menambahkan "${result.namaKegiatan}"!')),
+        SnackBar(
+          content: Text('Berhasil menambahkan "${result.namaKegiatan}"!'),
+          backgroundColor: const Color(0xFF006400),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
     }
   }
@@ -49,27 +53,50 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Daftar Pengalaman'),
+            automaticallyImplyLeading: false,
+            title: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Daftar Pengalaman'),
+                Text('Portofolio & Rekam Jejak', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              ],
+            ),
           ),
           body: _viewModel.isEmpty
               // Tampilan 1: Empty State
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.inbox_outlined, size: 64, color: Colors.grey),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Belum Ada Pengalaman',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton.icon(
-                        onPressed: _navigateToAddScreen,
-                        icon: const Icon(Icons.add),
-                        label: const Text('Tambah Pengalaman'),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Color(0xFFE8F5E9),
+                          child: Icon(Icons.assignment_turned_in_outlined, size: 40, color: Color(0xFF006400)),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Belum Ada Pengalaman',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Mulai bangun portofolio pengalaman dan riwayat kegiatanmu di kampus.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: _navigateToAddScreen,
+                            icon: const Icon(Icons.add),
+                            label: const Text('Tambah Pengalaman'),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               // Tampilan 2: ListView Kartu Pengalaman
@@ -87,21 +114,30 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                           children: [
                             Text(
                               item.namaKegiatan,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                const Icon(Icons.badge_outlined, size: 16, color: Color(0xFF006400)),
+                                const SizedBox(width: 6),
+                                Text(
+                                  item.peran,
+                                  style: const TextStyle(color: Color(0xFF006400), fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 4),
-                            Text(
-                              item.peran,
-                              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              item.tahun,
-                              style: const TextStyle(color: Colors.grey),
+                            Row(
+                              children: [
+                                const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
+                                const SizedBox(width: 6),
+                                Text(item.tahun, style: const TextStyle(color: Colors.grey)),
+                              ],
                             ),
                             if (item.deskripsi.isNotEmpty) ...[
-                              const SizedBox(height: 8),
-                              Text(item.deskripsi),
+                              const Divider(height: 20),
+                              Text(item.deskripsi, style: const TextStyle(color: Colors.black87)),
                             ],
                           ],
                         ),
@@ -109,11 +145,17 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                     );
                   },
                 ),
-          floatingActionButton: !_viewModel.isEmpty
-              ? FloatingActionButton.extended(
-                  onPressed: _navigateToAddScreen,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Tambah Pengalaman'),
+          bottomNavigationBar: !_viewModel.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _navigateToAddScreen,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Tambah Pengalaman'),
+                    ),
+                  ),
                 )
               : null,
         );

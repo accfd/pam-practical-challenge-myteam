@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/pengalaman_model.dart';
 import '../viewmodels/pengalaman_viewmodel.dart';
 
-// View 2: Form Input Pengalaman
+// View 2: Form Input Riwayat Pengalaman
 class TambahPengalamanScreen extends StatefulWidget {
   final List<PengalamanModel> pengalamanTerdaftar;
 
@@ -54,6 +54,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
         SnackBar(
           content: Text('Pengalaman "$nama" sebagai "$peran" tahun $tahun sudah ada!'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return;
@@ -72,20 +73,27 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
       deskripsi: _deskripsiController.text.trim(),
     );
 
-    // 4. Dialog sukses & kembalikan data via Navigator.pop (Feedback & Navigation)
+    // 4. Modal Dialog Sukses & Backward Data Return (Feedback & Navigation)
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
+        icon: const Icon(Icons.check_circle_rounded, color: Color(0xFF006400), size: 52),
         title: const Text('Pengalaman disimpan!'),
-        content: Text('Pengalaman "$nama" berhasil ditambahkan.'),
+        content: Text(
+          'Pengalaman "$nama" berhasil ditambahkan ke portofolio riwayat kegiatan Anda.',
+          textAlign: TextAlign.center,
+        ),
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pop(context, newPengalaman);
-            },
-            child: const Text('Lihat Daftar Pengalaman'),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                Navigator.pop(context, newPengalaman);
+              },
+              child: const Text('Lihat Daftar Pengalaman'),
+            ),
           ),
         ],
       ),
@@ -100,7 +108,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Tambah Pengalaman'),
-            Text('Form Riwayat Kegiatan', style: TextStyle(fontSize: 12)),
+            Text('Form Riwayat Kegiatan', style: TextStyle(color: Colors.grey, fontSize: 12)),
           ],
         ),
       ),
@@ -116,23 +124,21 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 enabled: !_isLoading,
                 decoration: const InputDecoration(
                   labelText: 'Nama Kegiatan',
-                  hintText: 'Contoh: PIMNAS / BEM',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.event),
+                  hintText: 'Contoh: PIMNAS 37 / BEM KM UNAND',
+                  prefixIcon: Icon(Icons.emoji_events_outlined),
                 ),
                 validator: PengalamanViewModel.validasiNamaKegiatan,
               ),
               const SizedBox(height: 16),
 
-              // 2. Peran
+              // 2. Peran / Posisi
               TextFormField(
                 controller: _peranController,
                 enabled: !_isLoading,
                 decoration: const InputDecoration(
-                  labelText: 'Peran',
-                  hintText: 'Contoh: Ketua / Anggota',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+                  labelText: 'Peran / Posisi',
+                  hintText: 'Contoh: Ketua Tim / Staf Ahli',
+                  prefixIcon: Icon(Icons.badge_outlined),
                 ),
                 validator: PengalamanViewModel.validasiPeran,
               ),
@@ -146,8 +152,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 decoration: const InputDecoration(
                   labelText: 'Tahun Pelaksanaan',
                   hintText: 'Contoh: 2026',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.calendar_today),
+                  prefixIcon: Icon(Icons.calendar_today_outlined),
                 ),
                 validator: PengalamanViewModel.validasiTahun,
               ),
@@ -157,11 +162,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
               TextFormField(
                 controller: _deskripsiController,
                 enabled: !_isLoading,
-                maxLines: 3,
+                maxLines: 4,
                 decoration: const InputDecoration(
                   labelText: 'Deskripsi Kontribusi (Opsional)',
-                  hintText: 'Tuliskan deskripsi tugas Anda...',
-                  border: OutlineInputBorder(),
+                  hintText: 'Tuliskan rincian tugas dan kontribusi Anda...',
+                  alignLabelWithHint: true,
                 ),
               ),
               const SizedBox(height: 24),
@@ -169,7 +174,6 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
               // Tombol Simpan
               SizedBox(
                 width: double.infinity,
-                height: 48,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _submitForm,
                   child: _isLoading
@@ -179,9 +183,9 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                             SizedBox(
                               width: 18,
                               height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: 10),
                             Text('Menyimpan...'),
                           ],
                         )
