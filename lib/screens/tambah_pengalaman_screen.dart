@@ -2,20 +2,9 @@ import 'package:flutter/material.dart';
 import '../models/pengalaman_model.dart';
 import '../viewmodels/pengalaman_viewmodel.dart';
 
-/// ==============================================================================
-/// LAPISAN: PRESENTATION LAYER (VIEW 2 - FORM TAMBAH PENGALAMAN)
-/// ==============================================================================
-/// [Presentation Layer / View 2]:
-/// Layar form interaktif yang bertugas menangkap input data riwayat kegiatan mahasiswa.
-/// Mengimplementasikan alur lengkap:
-/// 1. [Forward Data Passing]: Menerima data daftar nama kegiatan dari layar awal.
-/// 2. [Multi-Tier Validation]: Pengecekan input berlapis (Required, Min Length, Valid Number, Anti-Duplikasi).
-/// 3. [Feedback Multi-Status]: Status Gagal (Border Merah), Proses (Spinner Loading), dan Sukses (Modal Dialog).
-/// 4. [Backward Result Passing]: Mengembalikan objek data baru ke layar utama.
+/// Layar form interaktif untuk menambahkan pengalaman baru (View 2)
 class TambahPengalamanScreen extends StatefulWidget {
-  /// [Forward Data Passing (Data Diterima dari Screen Sebelumnya - Modul 4 Slide 28)]:
-  /// Menerima kumpulan objek pengalaman yang sudah terdaftar di memori portofolio mahasiswa.
-  /// Data ini diteruskan ke ViewModel untuk validasi anti-duplikasi cerdas (kombinasi nama + peran + tahun).
+  // Menerima data daftar pengalaman dari layar awal untuk validasi anti-duplikasi
   final List<PengalamanModel> pengalamanTerdaftar;
 
   const TambahPengalamanScreen({
@@ -28,36 +17,18 @@ class TambahPengalamanScreen extends StatefulWidget {
 }
 
 class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
-  /// [GlobalKey<FormState>]:
-  /// Kunci identitas unik global bawaan Flutter (Modul 4 Slide 16) yang bertindak
-  /// sebagai "remote control" untuk mengendalikan widget Form.
-  /// Melalui kunci ini, kita dapat memicu pemeriksaan validasi ke seluruh kolom teks
-  /// sekaligus secara serentak hanya dengan satu baris kode: `_formKey.currentState!.validate()`.
   final _formKey = GlobalKey<FormState>();
 
-  /// [TextEditingController]:
-  /// Objek pengontrol kolom teks (Modul 4 Slide 8) yang bertugas membaca teks
-  /// yang sedang diketik oleh pengguna, mendengarkan perubahan ketikan,
-  /// dan memanipulasi isi field formulir.
   final _namaController = TextEditingController();
   final _peranController = TextEditingController();
   final _tahunController = TextEditingController();
   final _deskripsiController = TextEditingController();
 
-  /// [Loading State (Status Sedang Memproses) - Modul 4 Slide 20]:
-  /// Variabel boolean pengontrol status pemrosesan data.
-  /// - Bernilai false: Form aktif dan siap menerima ketikan.
-  /// - Bernilai true: Sistem sedang menyimpan data; tombol berubah menampilkan animasi
-  ///   lingkaran berputar (CircularProgressIndicator) dan input dinonaktifkan sementara
-  ///   agar pengguna tidak menekan tombol berkali-kali secara tidak sengaja (anti double-submit).
   bool _isLoading = false;
 
   @override
   void dispose() {
-    /// [Pembersihan Memori / Memory Leak Prevention - Modul 4 Slide 8]:
-    /// Seluruh TextEditingController WAJIB dihancurkan (dispose) saat layar form ditutup.
-    /// Jika dibiarkan terbuka, controller akan terus memakan kapasitas RAM HP di latar belakang
-    /// sehingga menimbulkan kebocoran memori (Memory Leak) dan memperlambat kinerja smartphone.
+    // Membebaskan controller untuk mencegah kebocoran memori (Memory Leak)
     _namaController.dispose();
     _peranController.dispose();
     _tahunController.dispose();
@@ -65,31 +36,19 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     super.dispose();
   }
 
-  /// ==============================================================================
-  /// WORKFLOW TAHAP 1, 3, & 4: EVENT SUBMIT, VALIDASI, & FEEDBACK PEMROSESAN
-  /// ==============================================================================
   void _submitForm() async {
-    /// [FocusScope.of(context).unfocus()]:
-    /// Menutup papan ketik virtual (keyboard) di layar HP secara otomatis saat tombol ditekan,
-    /// sehingga pandangan pengguna tidak terhalang keyboard saat melihat feedback/pesan.
     FocusScope.of(context).unfocus();
 
-    /// [WORKFLOW TAHAP 3: VALIDATION (Modul 4 Slide 16 & 22)]:
-    /// Memeriksa seluruh TextFormField di dalam Form.
-    /// Jika salah satu field tidak memenuhi kriteria validasi di ViewModel:
-    /// - Fungsi validate() mengembalikan nilai false.
-    /// - Pesan error dan border merah otomatis muncul di bawah masing-masing kolom yang bermasalah.
-    /// - Eksekusi dihentikan (return) agar data yang cacat tidak diproses.
+    // 1. Validasi field dasar (Required, Min Length, Valid Number)
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    /// [Validasi Anti-Duplikasi Cerdas (Kombinasi Nama + Peran + Tahun)]:
-    /// Menolak entri hanya jika nama kegiatan, peran, dan tahun ketiganya sama persis.
     final namaInput = _namaController.text.trim();
     final peranInput = _peranController.text.trim();
     final tahunInput = _tahunController.text.trim();
 
+    // 2. Validasi anti-duplikasi cerdas kombinasi nama + peran + tahun
     final isDuplikat = PengalamanViewModel.isDuplikatKombinasi(
       nama: namaInput,
       peran: peranInput,
@@ -98,7 +57,6 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     );
 
     if (isDuplikat) {
-      /// [WORKFLOW TAHAP 4: FEEDBACK STATUS GAGAL (ANTI-DUPLIKASI)]:
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -112,25 +70,19 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
       return;
     }
 
-    /// [WORKFLOW TAHAP 4: FEEDBACK STATUS PROSES / LOADING (Modul 4 Slide 20)]:
-    /// Mengaktifkan state loading sehingga tombol simpan berubah menjadi spinner animasi.
+    // 3. Feedback status proses (Loading spinner)
     setState(() {
       _isLoading = true;
     });
 
-    // Simulasi jeda pemrosesan / penyimpanan data (misal: proses parsing atau koneksi lokal)
     await Future.delayed(const Duration(milliseconds: 700));
 
-    // Memastikan layar masih aktif di widget tree sebelum melanjutkan manipulasi tampilan
     if (!mounted) return;
 
     setState(() {
       _isLoading = false;
     });
 
-    /// [Pembungkusan ke Objek Strongly-Typed Model]:
-    /// Mengambil nilai teks bersih (.trim()) dari masing-masing controller dan
-    /// membungkusnya ke dalam objek PengalamanModel yang aman dari kesalahan tipe data.
     final newPengalaman = PengalamanModel(
       namaKegiatan: _namaController.text.trim(),
       peran: _peranController.text.trim(),
@@ -138,13 +90,9 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
       deskripsi: _deskripsiController.text.trim(),
     );
 
-    /// [WORKFLOW TAHAP 4: FEEDBACK STATUS SUKSES (MODAL SUCCESS DIALOG)]:
-    /// Menampilkan popup konfirmasi visual yang menarik di tengah layar (Modul 4 Slide 20).
+    // 4. Feedback status sukses (Modal Dialog) & pengembalian data ke layar utama
     showDialog(
       context: context,
-      /// [barrierDismissible: false]:
-      /// Mengunci popup agar tidak dapat ditutup secara tidak sengaja hanya dengan mengetuk
-      /// area kosong di luar kotak dialog. Pengguna harus menekan tombol konfirmasi di dalam dialog.
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
@@ -189,11 +137,8 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(ctx); // Menutup jendela popup modal dialog
-
-                  /// [WORKFLOW TAHAP 5: NAVIGATION / RESULT (Modul 4 Slide 29)]:
-                  /// [Backward Result Passing]: Menutup layar TambahPengalamanScreen dan
-                  /// mengembalikan objek 'newPengalaman' kembali ke DaftarPengalamanScreen.
+                  Navigator.pop(ctx);
+                  // Backward Result Passing: mengembalikan objek ke layar sebelumnya
                   Navigator.pop(context, newPengalaman);
                 },
                 child: const Text(
@@ -220,7 +165,6 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          // Jika ditekan, kembali ke layar utama tanpa membawa result (Batal)
           onPressed: _isLoading ? null : () => Navigator.pop(context),
         ),
         title: const Column(
@@ -260,9 +204,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // ==============================================================================
-                // 1. FIELD NAMA KEGIATAN (Wajib Diisi + Validasi Anti-Duplikasi)
-                // ==============================================================================
+                // 1. Field Nama Kegiatan
                 const Text('Nama Kegiatan',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -270,19 +212,14 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                   controller: _namaController,
                   enabled: !_isLoading,
                   decoration: _buildInputDecoration(
-                    hintText: 'Masukkan nama kegiatan / lomba',
+                    hintText: 'Masukkan nama kegiatan',
                     icon: Icons.emoji_events_outlined,
                   ),
-                  /// [Delegasi Validasi ke ViewModel (Modul 3 Section 3)]:
-                  /// Logika pengecekan nama (wajib diisi dan minimal 3 karakter)
-                  /// didelegasikan sepenuhnya ke fungsi statis di ViewModel.
                   validator: PengalamanViewModel.validasiNamaKegiatan,
                 ),
                 const SizedBox(height: 16),
 
-                // ==============================================================================
-                // 2. FIELD PERAN (Wajib Diisi)
-                // ==============================================================================
+                // 2. Field Peran
                 const Text('Peran',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -293,15 +230,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     hintText: 'Masukkan peran atau posisi',
                     icon: Icons.badge_outlined,
                   ),
-                  /// [Delegasi Validasi Peran]:
-                  /// Memastikan posisi/peran tidak dikosongkan oleh pengguna.
                   validator: PengalamanViewModel.validasiPeran,
                 ),
                 const SizedBox(height: 16),
 
-                // ==============================================================================
-                // 3. FIELD TAHUN PELAKSANAAN (Validasi Multi-Tier)
-                // ==============================================================================
+                // 3. Field Tahun Pelaksanaan
                 const Text('Tahun Pelaksanaan',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -313,15 +246,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     hintText: 'Contoh: 2026',
                     icon: Icons.calendar_today_outlined,
                   ),
-                  /// [Delegasi Validasi Multi-Tier]:
-                  /// Memvalidasi: bukan teks kosong -> angka bulat sah (tryParse) -> rentang 2000-2026.
                   validator: PengalamanViewModel.validasiTahun,
                 ),
                 const SizedBox(height: 16),
 
-                // ==============================================================================
-                // 4. FIELD DESKRIPSI KONTRIBUSI (Opsional)
-                // ==============================================================================
+                // 4. Field Deskripsi Kontribusi
                 const Text('Deskripsi Kontribusi',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -348,9 +277,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // ==============================================================================
-                // TOMBOL SIMPAN DENGAN FEEDBACK STATUS PROSES (SPINNER / LOADING)
-                // ==============================================================================
+                // Tombol Simpan dengan Status Loading
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -403,10 +330,6 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     );
   }
 
-  /// [Helper Styling Input & Error Visual Feedback]:
-  /// Mengatur tata letak border input secara seragam.
-  /// Menerapkan [Visual Error Feedback] dengan warna border merah mencolok
-  /// saat ada field yang melanggar aturan validasi (Modul 4 Slide 22).
   InputDecoration _buildInputDecoration({
     required String hintText,
     required IconData icon,
@@ -426,12 +349,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
       ),
-      // [errorBorder]: Garis tepi merah saat field tidak lolos validasi (Status Gagal)
+      // Visual feedback border merah saat invalid
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Colors.red),
       ),
-      // [focusedErrorBorder]: Garis tepi merah lebih tebal saat kursor aktif di field yang salah
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Colors.red, width: 1.5),

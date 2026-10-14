@@ -3,14 +3,7 @@ import '../models/pengalaman_model.dart';
 import '../viewmodels/pengalaman_viewmodel.dart';
 import 'tambah_pengalaman_screen.dart';
 
-/// ==============================================================================
-/// LAPISAN: PRESENTATION LAYER (VIEW 1 - DAFTAR PENGALAMAN)
-/// ==============================================================================
-/// [Presentation Layer / View]:
-/// Lapisan antarmuka pengguna (UI) yang bertugas menggambar komponen visual di layar HP
-/// (seperti AppBar, tombol, teks status, dan kartu pengalaman) serta menangkap interaksi pengguna.
-/// Sesuai pola MVVM murni (Modul 3 Slide 18), View tidak boleh mengolah logika bisnis sendiri;
-/// seluruh urusan data dan aturan divalidasikan ke [PengalamanViewModel].
+/// Layar utama menampilkan daftar portofolio pengalaman mahasiswa (View 1)
 class DaftarPengalamanScreen extends StatefulWidget {
   const DaftarPengalamanScreen({super.key});
 
@@ -19,64 +12,32 @@ class DaftarPengalamanScreen extends StatefulWidget {
 }
 
 class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
-  /// [Single Source of Truth (Satu-satunya Sumber Kebenaran Data)]:
-  /// Prinsip arsitektur di mana data riwayat pengalaman hanya disimpan dan diatur
-  /// di SATU tempat terpusat yang resmi, yaitu di dalam objek [_viewModel].
-  /// Layar UI hanya bertindak sebagai "cermin" yang memantulkan kondisi data dari ViewModel,
-  /// sehingga data tidak akan pernah berselisih (inkonsisten).
+  // Instance ViewModel sebagai Single Source of Truth
   final PengalamanViewModel _viewModel = PengalamanViewModel();
 
   @override
   void dispose() {
-    /// [dispose() & Memory Leak Prevention]:
-    /// - [dispose()] adalah metode daur hidup (lifecycle) yang otomatis dipanggil Flutter
-    ///   saat layar ini ditutup / dihancurkan secara permanen.
-    /// - [Memory Leak (Kebocoran Memori)]: Masalah serius jika objek pendengar (listener)
-    ///   dibiarkan terus aktif di memori RAM padahal layarnya sudah tidak dipakai lagi.
-    ///   Hal ini membuat HP menjadi panas, boros baterai, lambat, atau bahkan aplikasi crash.
-    /// - Dengan memanggil `_viewModel.dispose()`, kita memutus seluruh sambungan listener
-    ///   dan membersihkan memori dengan tertib (Modul 4 Slide 8).
     _viewModel.dispose();
     super.dispose();
   }
 
-  /// ==============================================================================
-  /// WORKFLOW TAHAP 1 & 5: EVENT, FORWARD DATA PASSING & NAVIGATION RESULT
-  /// ==============================================================================
-  /// [Asynchronous (async / await)]:
-  /// Mekanisme agar proses menunggu pengguna mengisi form berjalan di latar belakang
-  /// tanpa membekukan (freeze) aplikasi HP. Layar tetap lancar merespons animasi.
-  ///
-  /// [Generic Type <PengalamanModel>]:
-  /// Penulisan tipe data spesifik di dalam kurung siku `<...>` pada `Navigator.push<PengalamanModel>`.
-  /// Fungsinya menjamin [Type-Safety] (keamanan tipe data), yaitu memastikan bahwa nilai
-  /// hasil kembalian (result) yang dikirim oleh layar form PASTI berupa objek PengalamanModel,
-  /// bukan teks acak atau objek lain yang salah.
+  /// Navigasi ke Form Tambah Pengalaman dan penanganan data hasil kembalian
   void _navigateToAddScreen() async {
     final result = await Navigator.push<PengalamanModel>(
       context,
       MaterialPageRoute(
         builder: (ctx) => TambahPengalamanScreen(
-          /// [Forward Data Passing (Meneruskan Data Maju)]:
-          /// Mengirimkan seluruh daftar objek pengalaman yang sudah terdaftar ke layar form (Modul 4 Slide 28)
-          /// agar form bisa melakukan validasi anti-duplikasi cerdas (kombinasi nama, peran, dan tahun).
+          // Forward Data Passing: meneruskan data untuk validasi duplikasi cerdas
           pengalamanTerdaftar: _viewModel.listPengalaman,
         ),
       ),
     );
 
-    // Memastikan widget masih terpasang di layar sebelum memanipulasi UI (Safety Check)
     if (!mounted) return;
 
-    /// ==============================================================================
-    /// WORKFLOW TAHAP 5: NAVIGATION / RESULT (Modul 4 Slide 29)
-    /// ==============================================================================
-    // 1. KONDISI SUKSES (result != null): Pengguna menekan tombol 'Simpan Pengalaman'
+    // 1. Kondisi Sukses Simpan: tambah data ke ViewModel & tampilkan SnackBar hijau
     if (result != null) {
-      // Mengirimkan objek model baru ke ViewModel untuk disimpan dan dipancarkan ke UI
       _viewModel.tambahPengalaman(result);
-
-      // Feedback SnackBar (Pemberitahuan mengambang di bawah) mengonfirmasi keberhasilan
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Berhasil menambahkan "${result.namaKegiatan}" ke daftar pengalaman!'),
@@ -86,7 +47,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
         ),
       );
     }
-    // 2. KONDISI BATAL (result == null): Pengguna menekan tombol panah kembali di AppBar
+    // 2. Kondisi Batal: pengguna kembali tanpa menyimpan
     else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -101,13 +62,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /// [ListenableBuilder]:
-    /// Widget resmi dan efisien bawaan Flutter (Modul 4 Slide 10-11) yang bertugas
-    /// mendengarkan objek ChangeNotifier (yaitu _viewModel).
-    /// Keunggulannya dibanding setState biasa:
-    /// Ketika _viewModel memanggil `notifyListeners()`, hanya widget di dalam builder ini
-    /// yang digambar ulang (rebuild). Bagian Scaffold dan AppBar tidak perlu digambar ulang,
-    /// sehingga performa rendering aplikasi menjadi sangat cepat dan hemat baterai.
+    // ListenableBuilder merender ulang UI secara efisien saat ViewModel memanggil notifyListeners()
     return ListenableBuilder(
       listenable: _viewModel,
       builder: (context, _) {
@@ -116,7 +71,6 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.white,
-            // Layar beranda (root) tidak memerlukan tombol panah kembali
             automaticallyImplyLeading: false,
             title: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,8 +90,6 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
               ],
             ),
           ),
-
-          /// Tampilan Adaptif: Beralih otomatis antara [Empty State] dan [Populated List]
           body: _viewModel.isEmpty
               // ==============================================================================
               // TAMPILAN 1: EMPTY STATE (Kondisi saat belum ada pengalaman tersimpan)
