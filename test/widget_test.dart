@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:myteam_app/main.dart';
+import 'package:myteam_app/models/pengalaman_model.dart';
 import 'package:myteam_app/viewmodels/pengalaman_viewmodel.dart';
 
 /// ==============================================================================
@@ -18,15 +19,66 @@ void main() {
   /// Karena logika bisnis dipisahkan dari UI (MVVM), pengujian ini berjalan sangat
   /// cepat dalam hitungan milidetik.
   group('Unit Test: Validasi Bisnis di PengalamanViewModel (MVVM)', () {
-    test('Validasi Nama Kegiatan: Wajib diisi, min 3 karakter, dan anti-duplikasi', () {
+    test('Validasi Nama Kegiatan: Wajib diisi dan min 3 karakter', () {
       expect(PengalamanViewModel.validasiNamaKegiatan(null), 'Nama kegiatan wajib diisi!');
       expect(PengalamanViewModel.validasiNamaKegiatan('   '), 'Nama kegiatan wajib diisi!');
       expect(PengalamanViewModel.validasiNamaKegiatan('PI'), 'Nama kegiatan minimal 3 karakter!');
+      expect(PengalamanViewModel.validasiNamaKegiatan('PIMNAS 37'), isNull);
+    });
+
+    test('Validasi Anti-Duplikasi Cerdas: Kombinasi Nama + Peran + Tahun', () {
+      final listUji = [
+        PengalamanModel(
+          namaKegiatan: 'BEM KM UNAND',
+          peran: 'Staf Muda',
+          tahun: '2023',
+          deskripsi: 'Magang organisasi',
+        ),
+      ];
+
+      // 1. Data 100% sama persis (Nama + Peran + Tahun sama) -> Ditolak (true)
       expect(
-        PengalamanViewModel.validasiNamaKegiatan('PIMNAS', terdaftar: ['pimnas']),
-        'Kegiatan "PIMNAS" sudah terdaftar di daftar pengalaman!',
+        PengalamanViewModel.isDuplikatKombinasi(
+          nama: 'bem km unand',
+          peran: 'staf muda',
+          tahun: '2023',
+          terdaftar: listUji,
+        ),
+        isTrue,
       );
-      expect(PengalamanViewModel.validasiNamaKegiatan('Gemastik', terdaftar: ['pimnas']), isNull);
+
+      // 2. Kegiatan sama tapi peran beda (Promosi jabatan) -> Diizinkan (false)
+      expect(
+        PengalamanViewModel.isDuplikatKombinasi(
+          nama: 'BEM KM UNAND',
+          peran: 'Menteri Kominfo',
+          tahun: '2024',
+          terdaftar: listUji,
+        ),
+        isFalse,
+      );
+
+      // 3. Kegiatan dan peran sama tapi tahun beda (Menjabat 2 periode) -> Diizinkan (false)
+      expect(
+        PengalamanViewModel.isDuplikatKombinasi(
+          nama: 'BEM KM UNAND',
+          peran: 'Staf Muda',
+          tahun: '2024',
+          terdaftar: listUji,
+        ),
+        isFalse,
+      );
+
+      // 4. Kegiatan sepenuhnya baru -> Diizinkan (false)
+      expect(
+        PengalamanViewModel.isDuplikatKombinasi(
+          nama: 'PIMNAS 37',
+          peran: 'Ketua Tim',
+          tahun: '2024',
+          terdaftar: listUji,
+        ),
+        isFalse,
+      );
     });
 
     test('Validasi Peran: Wajib diisi', () {

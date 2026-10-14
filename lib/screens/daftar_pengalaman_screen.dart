@@ -58,9 +58,9 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
       MaterialPageRoute(
         builder: (ctx) => TambahPengalamanScreen(
           /// [Forward Data Passing (Meneruskan Data Maju)]:
-          /// Mengirimkan daftar nama kegiatan yang sudah terdaftar ke layar form (Modul 4 Slide 28)
-          /// agar form bisa mendeteksi secara langsung jika pengguna mencoba mengetik nama yang sama.
-          kegiatanTerdaftar: _viewModel.daftarNamaKegiatan,
+          /// Mengirimkan seluruh daftar objek pengalaman yang sudah terdaftar ke layar form (Modul 4 Slide 28)
+          /// agar form bisa melakukan validasi anti-duplikasi cerdas (kombinasi nama, peran, dan tahun).
+          pengalamanTerdaftar: _viewModel.listPengalaman,
         ),
       ),
     );

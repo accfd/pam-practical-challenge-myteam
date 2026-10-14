@@ -14,13 +14,13 @@ import '../viewmodels/pengalaman_viewmodel.dart';
 /// 4. [Backward Result Passing]: Mengembalikan objek data baru ke layar utama.
 class TambahPengalamanScreen extends StatefulWidget {
   /// [Forward Data Passing (Data Diterima dari Screen Sebelumnya - Modul 4 Slide 28)]:
-  /// Menerima kumpulan nama kegiatan yang sudah terdaftar di memori portofolio mahasiswa.
-  /// Data ini diteruskan ke fungsi validasi ViewModel untuk mencegah entri data ganda (duplikat).
-  final List<String> kegiatanTerdaftar;
+  /// Menerima kumpulan objek pengalaman yang sudah terdaftar di memori portofolio mahasiswa.
+  /// Data ini diteruskan ke ViewModel untuk validasi anti-duplikasi cerdas (kombinasi nama + peran + tahun).
+  final List<PengalamanModel> pengalamanTerdaftar;
 
   const TambahPengalamanScreen({
     super.key,
-    this.kegiatanTerdaftar = const [],
+    this.pengalamanTerdaftar = const [],
   });
 
   @override
@@ -81,6 +81,34 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     /// - Pesan error dan border merah otomatis muncul di bawah masing-masing kolom yang bermasalah.
     /// - Eksekusi dihentikan (return) agar data yang cacat tidak diproses.
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    /// [Validasi Anti-Duplikasi Cerdas (Kombinasi Nama + Peran + Tahun)]:
+    /// Menolak entri hanya jika nama kegiatan, peran, dan tahun ketiganya sama persis.
+    final namaInput = _namaController.text.trim();
+    final peranInput = _peranController.text.trim();
+    final tahunInput = _tahunController.text.trim();
+
+    final isDuplikat = PengalamanViewModel.isDuplikatKombinasi(
+      nama: namaInput,
+      peran: peranInput,
+      tahun: tahunInput,
+      terdaftar: widget.pengalamanTerdaftar,
+    );
+
+    if (isDuplikat) {
+      /// [WORKFLOW TAHAP 4: FEEDBACK STATUS GAGAL (ANTI-DUPLIKASI)]:
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Pengalaman "$namaInput" sebagai "$peranInput" pada tahun $tahunInput sudah ada di daftar!',
+          ),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
       return;
     }
 
@@ -246,12 +274,9 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     icon: Icons.emoji_events_outlined,
                   ),
                   /// [Delegasi Validasi ke ViewModel (Modul 3 Section 3)]:
-                  /// Logika pengecekan nama (wajib diisi, min 3 karakter, dan anti-duplikasi)
+                  /// Logika pengecekan nama (wajib diisi dan minimal 3 karakter)
                   /// didelegasikan sepenuhnya ke fungsi statis di ViewModel.
-                  validator: (value) => PengalamanViewModel.validasiNamaKegiatan(
-                    value,
-                    terdaftar: widget.kegiatanTerdaftar,
-                  ),
+                  validator: PengalamanViewModel.validasiNamaKegiatan,
                 ),
                 const SizedBox(height: 16),
 

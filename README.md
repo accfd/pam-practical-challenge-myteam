@@ -128,9 +128,10 @@ Aplikasi menggunakan `_formKey.currentState!.validate()` dengan 4 lapisan aturan
 
 | Field | Kriteria Validasi | Kondisi Invalid | Feedback Pesan Error |
 |---|---|---|---|
-| **Nama Kegiatan** | 1. Wajib diisi<br>2. Minimal 3 karakter<br>3. **Anti-Duplikasi** | • Kosong / whitespace<br>• Kurang dari 3 huruf<br>• Sudah ada di daftar kiriman Screen 1 | 1. `"Nama kegiatan wajib diisi!"`<br>2. `"Nama kegiatan minimal 3 karakter!"`<br>3. `"Kegiatan '[Nama]' sudah terdaftar di daftar pengalaman!"` |
+| **Nama Kegiatan** | 1. Wajib diisi<br>2. Minimal 3 karakter | • Kosong / whitespace<br>• Kurang dari 3 huruf | 1. `"Nama kegiatan wajib diisi!"`<br>2. `"Nama kegiatan minimal 3 karakter!"` |
 | **Peran** | Wajib diisi (Required) | Kosong atau hanya berupa spasi | `"Peran wajib diisi!"` |
 | **Tahun** | 1. Wajib diisi<br>2. Format Numerik<br>3. Rentang Tahun Logis | 1. Input kosong<br>2. Bukan integer valid (`int.tryParse == null`)<br>3. Nilai $< 2000$ atau $> 2026$ | 1. `"Tahun wajib diisi!"`<br>2. `"Tahun harus berupa angka valid!"`<br>3. `"Masukkan tahun antara 2000 - 2026!"` |
+| **Kombinasi Entri** | **Anti-Duplikasi Cerdas**<br>(Nama + Peran + Tahun) | Data 100% sama persis (Nama, Peran, dan Tahun ketiga-tiganya sama dengan data lama) | SnackBar Merah: `"Pengalaman '[Nama]' sebagai '[Peran]' pada tahun [Tahun] sudah ada di daftar!"`<br>*(Kegiatan sama diizinkan jika peran atau tahun berbeda)* |
 | **Deskripsi** | Opsional | Nilai boleh kosong | Input tetap diterima |
 
 ---

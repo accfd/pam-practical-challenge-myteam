@@ -74,22 +74,36 @@ class PengalamanViewModel extends ChangeNotifier {
   // menggunakan file pengujian otomatis (automated unit test) tanpa perlu menjalankan emulator.
 
   /// [Validasi Nama Kegiatan]:
-  /// Menerapkan 3 lapis aturan:
+  /// Menerapkan 2 lapis aturan dasar:
   /// 1. Required (Wajib diisi): Tidak boleh bernilai null atau spasi kosong.
   /// 2. Min Length (Panjang Minimal): Minimal 3 karakter agar nama kegiatan bermakna.
-  /// 3. Anti-Duplikasi: Memeriksa apakah kegiatan tersebut sudah pernah didaftarkan sebelumnya.
-  static String? validasiNamaKegiatan(String? value, {List<String> terdaftar = const []}) {
+  static String? validasiNamaKegiatan(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Nama kegiatan wajib diisi!';
     }
     if (value.trim().length < 3) {
       return 'Nama kegiatan minimal 3 karakter!';
     }
-    final namaKecil = value.trim().toLowerCase();
-    if (terdaftar.contains(namaKecil)) {
-      return 'Kegiatan "$value" sudah terdaftar di daftar pengalaman!';
-    }
-    return null; // Mengembalikan null berarti data VALID (lolos seleksi)
+    return null; // Mengembalikan null berarti lolos validasi dasar
+  }
+
+  /// [Validasi Anti-Duplikasi Cerdas (Kombinasi Nama + Peran + Tahun)]:
+  /// Menolak data jika dan hanya jika Nama Kegiatan, Peran, DAN Tahun ketiganya sama persis.
+  /// Mengizinkan kegiatan yang sama asalkan peran atau tahunnya berbeda
+  /// (contoh: "BEM KM UNAND" sebagai Staf Muda 2023 dan sebagai Menteri 2024 keduanya diizinkan).
+  static bool isDuplikatKombinasi({
+    required String nama,
+    required String peran,
+    required String tahun,
+    required List<PengalamanModel> terdaftar,
+  }) {
+    final n = nama.trim().toLowerCase();
+    final p = peran.trim().toLowerCase();
+    final t = tahun.trim();
+    return terdaftar.any((item) =>
+        item.namaKegiatan.trim().toLowerCase() == n &&
+        item.peran.trim().toLowerCase() == p &&
+        item.tahun.trim() == t);
   }
 
   /// [Validasi Peran]:
