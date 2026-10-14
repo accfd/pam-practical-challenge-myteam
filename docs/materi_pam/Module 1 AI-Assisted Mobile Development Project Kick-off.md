@@ -1,475 +1,170 @@
-# 📘 Module 1 AI-Assisted Mobile Development Project Kick-off
+# 📘 Modul 1: Pengembangan Aplikasi Mobile dengan Bantuan AI & Project Kick-off
 
-> **Sumber File:** `Module 1 AI-Assisted Mobile Development Project Kick-off.pdf`  
 > **Mata Kuliah:** Pengembangan Aplikasi Mobile (Semester 5)  
-> **Total Halaman:** 25 Halaman  
+> **Institusi:** Universitas Andalas  
+> **Fokus Utama:** Pengenalan ekosistem mobile, tren terkini, mental model kolaborasi Developer + AI, aturan penggunaan Generative AI, dan persiapan proyek tim.
 
 ---
 
-## 📄 Halaman / Slide 1
+## 🎯 Tujuan Pembelajaran
+Setelah mempelajari modul ini, mahasiswa diharapkan mampu:
+1. **Menjelaskan Platform Mobile & Evolusinya:** Memahami karakteristik unik perangkat mobile dibandingkan desktop/web.
+2. **Memahami Konsep AI-Assisted Development:** Menjelaskan bagaimana kecerdasan buatan membantu alur kerja rekayasa perangkat lunak mobile.
+3. **Mengidentifikasi Manfaat & Batasan GenAI:** Mengetahui kapan AI boleh digunakan dan kapan keputusan teknis wajib diambil oleh mahasiswa.
+4. **Membentuk Tim & Repositori Proyek:** Menyiapkan repositori Git untuk kolaborasi tim dalam satu semester.
 
-Mobile Application
-Development
-Module 1: AI-Assisted Mobile Development & Project Kick-off
+---
 
-### 🖼️ Konten Slide Visual / Diagram / Kode (Slide 1)
+## 📑 Agenda Perkuliahan
+1. Pengantar Pengembangan Mobile Berbantuan AI (*AI-Assisted Mobile Development*)
+2. Konsep *Vibe Coding* & Mental Model Developer Modern
+3. Siklus Hidup Pengembangan Perangkat Lunak (SDLC) & Integrasi AI
+4. Tren & Evolusi Teknologi Aplikasi Mobile
+5. *Project Kick-off* & Pembagian Peran Tim
+
+---
+
+## 💡 Kutipan Pengantar
+> *"Programming is learned by writing programs."*  
+> — **Brian Kernighan**  
+*(Kemampuan pemrograman sejati diasah melalui praktik langsung menulis kode, bukan sekadar menyalin solusi).*
+
+---
+
+## 📱 1. Karakteristik Unik Aplikasi Mobile
+Apa yang membedakan aplikasi mobile dengan aplikasi web atau desktop pada laptop?
+* **Input Berbasis Sentuhan & Gestur:** Tidak mengandalkan mouse/keyboard fisik, melainkan *tap*, *swipe*, *pinch*, dan *long press*.
+* **Keterbatasan Sumber Daya Hardware:** Memori (RAM), masa pakai baterai, dan daya pemrosesan lebih terbatas.
+* **Konektivitas Dinamis:** Jaringan seluler sering kali tidak stabil, berpindah antara Wi-Fi dan 4G/5G, atau bahkan masuk mode *offline*.
+* **Siklus Hidup Aplikasi (*Lifecycle*):** Aplikasi dapat sewaktu-waktu dijeda (*paused*), berjalan di latar belakang (*background*), atau dihentikan oleh sistem operasi untuk menghemat RAM.
+* **Integrasi Sensor Fisik:** GPS, kamera, akselerometer, sensor biometrik (sidik jari/wajah), dan notifikasi *push*.
+
+---
+
+## 🤖 2. Konsep AI-Assisted Development (Pengembangan Berbantuan AI)
+
+### Definisi Dasar
+Pengembangan perangkat lunak berbantuan AI adalah pendekatan di mana pengembang (*developer*) memanfaatkan asisten kecerdasan buatan untuk mempercepat dan meningkatkan kualitas berbagai aktivitas rekayasa perangkat lunak.
+
+### Prinsip Utama: *"AI Generates, Developer Decides"*
+* **AI Bertugas Merekomendasikan:** AI menghasilkan draf kode, alternatif logika, penjelasan konsep, atau saran perbaikan bug.
+* **Developer Memegang Kendali:** Pengembang tetap menjadi penanggung jawab penuh atas arsitektur, kebenaran fungsional, performa, dan keamanan kode.
+
 ```text
-UNIVERSITAS ANDALAS
-```
-
-### 🖼️ Konten Slide Visual / Diagram / Kode (Slide 1)
-```text
-verdekq
-```
-
----
-
-## 📄 Halaman / Slide 2
-
-Learning Objectives
-Explain mobile application development platforms and the evolution of mobile
-01
-applications
-Explain the concept of AI-assisted development in mobile application
-02
-development
-Explain the benefits and limitations of using Generative AI and AI coding
-03
-assistants
-Form a team and prepare a project repository for collaborative mobile
-04
-application development
-07/09/2026 2
-
-|  |
-| --- |
-| Learning Objectives |
-| Explain mobile application development platforms and the evolution of mobile 01 applications Explain the concept of AI-assisted development in mobile application 02 development Explain the benefits and limitations of using Generative AI and AI coding 03 assistants Form a team and prepare a project repository for collaborative mobile 04 application development |
-| 07/09/2026 2 |
-|  |
-
----
-
-## 📄 Halaman / Slide 3
-
-AGENDA
-• Introduction to AI-Assisted Mobile Development
-• Vibe Coding & AI Developer Mental Model
-• SDLC & AI-Assisted Development
-• Mobile Application Trends & Evolution
-• Project Kick-off
-
----
-
-## 📄 Halaman / Slide 4
-
-“
-“Programming is learned by writing programs.”
-- Brian Kernighan
-“
-
----
-
-## 📄 Halaman / Slide 5
-
-Introduction to AI-Assisted Mobile Development
-What makes mobile applications different from applications
-running on laptops or in a browser?
-07/09/2026 5
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| What makes mobile applications different from applications running on laptops or in a browser? |
-| 07/09/2026 5 |
-|  |
-
----
-
-## 📄 Halaman / Slide 6
-
-Introduction to AI-Assisted Mobile Development
-Mobile application development is the process of designing, building, testing, and
-maintaining software intended to run on mobile devices such as smartphones and
-tablets.
-Mobile applications have become an integral part of daily life. Mobile application development requires not only
-programming skills, but also an understanding of user needs, design, architecture, software quality, and the
-technology used.
-07/09/2026 6
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| Mobile application development is the process of designing, building, testing, and maintaining software intended to run on mobile devices such as smartphones and tablets. Mobile applications have become an integral part of daily life. Mobile application development requires not only programming skills, but also an understanding of user needs, design, architecture, software quality, and the technology used. |
-| 07/09/2026 6 |
-|  |
-
----
-
-## 📄 Halaman / Slide 7
-
-Introduction to AI-Assisted Mobile Development
-How Are Applications Traditionally Developed?
-07/09/2026 7
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| How Are Applications Traditionally Developed? |
-| 07/09/2026 7 |
-|  |
-
----
-
-## 📄 Halaman / Slide 8
-
-Introduction to AI-Assisted Mobile Development
-Generative AI in Software Development
-AI generates. Developer decides.
-AI generates recommendations. The developer remains responsible for technical
-decisions.
-07/09/2026 8
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| Generative AI in Software Development AI generates. Developer decides. AI generates recommendations. The developer remains responsible for technical decisions. |
-| 07/09/2026 8 |
-|  |
-
----
-
-## 📄 Halaman / Slide 9
-
-Introduction to AI-Assisted Mobile Development
-AI-Assisted Software Development
-AI-assisted development is a software development approach in which AI is used to assist developers in various
-development activities.
-07/09/2026 9
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| AI-Assisted Software Development AI-assisted development is a software development approach in which AI is used to assist developers in various development activities. |
-| 07/09/2026 9 |
-|  |
-
----
-
-## 📄 Halaman / Slide 10
-
-Introduction to AI-Assisted Mobile Development
-07/09/2026 10
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-|  |
-| 07/09/2026 10 |
-|  |
-
-### 🖼️ Konten Slide Visual / Diagram / Kode (Slide 10)
-```text
-Al-Assisted Software Development Al-assisted development is an approach to software development when Al is used to assist developers in various development activities. Provide context, INPUT User Requirements P- Design & Specifications Code / Artifacts Issues / Errors o DEVELOPER questions, or instructions Review Validate Modify Test Integrate Provide recommendations, code, explanations, or suggestions Al ASSISTANT OUTPUT Code / Features Generated Explanations & Alternative Solutions Bug Identification & Fixes Documentation / Unit Tests
+┌─────────────────────────────────────────────────────────────┐
+│                       ALUR KOLABORASI                       │
+├─────────────────────────────────────────────────────────────┤
+│  INPUT DARI DEVELOPER:                                      │
+│  - Kebutuhan Pengguna (User Requirements)                   │
+│  - Desain & Spesifikasi Teknis                              │
+│  - Konteks Kode & Catatan Masalah / Error                   │
+│                              ▼                              │
+│  PROSES OLEH AI ASSISTANT:                                  │
+│  - Memberikan rekomendasi & kode rancangan                  │
+│  - Menjelaskan alternatif algoritma                         │
+│  - Mengidentifikasi potensi celah / bug                     │
+│                              ▼                              │
+│  KONTROL KUALITAS OLEH DEVELOPER:                           │
+│  - Review (Telaah)  ->  Validate (Validasi Kebenaran)       │
+│  - Modify (Modifikasi) -> Test (Uji Coba Fungsional)        │
+│  - Integrate (Integrasikan ke dalam Proyek)                 │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📄 Halaman / Slide 11
+## 💬 3. Studi Kasus: "Jika AI Bisa Coding, Mengapa Developer Masih Dibutuhkan?"
 
-If AI Can Already Code, What Should Developers Do?
-A student asks AI:
-“Build a mobile food-ordering application with login, a database,
-payment, and notifications.”
-AI produces an application that runs successfully.
-However:
-• Not all user requirements are met;
-• Some of the code is not understood by the student;
-• There are security vulnerabilities;
-Discussion
-• Some features do not work under certain conditions.
-Discussion questions:
-• Can the application be considered successfully developed simply
-because it runs?
-• Who is responsible for these errors: AI or the developer?
-• As AI becomes increasingly capable of writing code, what core skills
-should developers have?
-07/09/2026 11
+**Skenario:**
+Seorang mahasiswa meminta AI: *"Buatkan aplikasi mobile pemesanan makanan lengkap dengan login, database, sistem pembayaran, dan notifikasi."*  
+AI menghasilkan kode lengkap dan aplikasi dapat dijalankan. Namun, saat dievaluasi:
+1. Tidak semua kebutuhan spesifik pengguna terpenuhi.
+2. Mahasiswa tidak memahami alur kerja kode yang dihasilkan.
+3. Terdapat celah keamanan (*security vulnerabilities*).
+4. Fitur mengalami crash saat diuji dalam kondisi jaringan lambat atau input tak terduga (*edge cases*).
 
-| Discussion | If AI Can Already Code, What Should Developers Do? A student asks AI: “Build a mobile food-ordering application with login, a database, payment, and notifications.” AI produces an application that runs successfully. However: • Not all user requirements are met; • Some of the code is not understood by the student; • There are security vulnerabilities; • Some features do not work under certain conditions. Discussion questions: • Can the application be considered successfully developed simply because it runs? • Who is responsible for these errors: AI or the developer? • As AI becomes increasingly capable of writing code, what core skills should developers have? |
-| --- | --- |
-| 07/09/2026 | 11 |
-|  |  |
+**Pelajaran Kunci:**
+* Aplikasi tidak bisa dikatakan sukses hanya karena "bisa di-*run*".
+* Tanggung jawab atas kegagalan sistem berada di tangan **pengembang**, bukan AI.
+* Keahlian inti developer di era AI bergeser dari sekadar mengetik sintaks menjadi: **pemahaman arsitektur, pemecahan masalah, validasi logika, analisis keamanan, dan pemahaman kebutuhan pengguna.**
 
 ---
 
-## 📄 Halaman / Slide 12
+## ⚡ 4. Mengenal "Vibe Coding" & Mental Model AI
 
-Introduction to AI-Assisted Mobile Development
-Vibe Coding
-07/09/2026 12
+### Apa itu *Vibe Coding*?
+*Vibe Coding* adalah istilah ketika pengembang menggunakan bahasa alami (*natural language*) untuk menginstruksikan AI agar membuat, memodifikasi, atau memvalidasi kode.
 
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| Vibe Coding |
-| 07/09/2026 12 |
-|  |
+### Mental Model yang Tepat
+* AI adalah **Asisten / Co-Pilot**, bukan "programmer pengganti".
+* Jangan memperlakukan AI seperti pesulap. Berikan konteks, instruksi spesifik, dan batasan arsitektur yang jelas.
 
----
-
-## 📄 Halaman / Slide 13
-
-Introduction to AI-Assisted Mobile Development
-Vibe Coding
-When developers use natural language to instruct AI to generate or modify code.
-07/09/2026 13
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| Vibe Coding When developers use natural language to instruct AI to generate or modify code. |
-| 07/09/2026 13 |
-|  |
+### Ekosistem Perangkat Kerja (Tools):
+1. **IDE:** VS Code, Android Studio, Google Antigravity IDE.
+2. **AI Coding Assistant:** GitHub Copilot, Gemini Code Assist, ChatGPT, Claude.
+3. **Version Control:** Git & GitHub untuk melacak setiap perubahan secara disiplin.
 
 ---
 
-## 📄 Halaman / Slide 14
+## ⚖️ 5. Aturan & Batasan Penggunaan AI di Kelas
 
-Introduction to AI-Assisted Mobile Development
-Developer + AI Mental Model
-AI is a coding assistant, not a “replacement programmer”
-07/09/2026 14
+Untuk memastikan mahasiswa benar-benar menguasai ilmu pemrograman mobile, berikut batasan penggunaan AI:
 
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| Developer + AI Mental Model AI is a coding assistant, not a “replacement programmer” |
-| 07/09/2026 14 |
-|  |
-
----
-
-## 📄 Halaman / Slide 15
-
-Introduction to AI-Assisted Mobile Development
-AI Coding Tools
-IDE, Chat Assistant, Version Control
-07/09/2026 15
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| AI Coding Tools IDE, Chat Assistant, Version Control |
-| 07/09/2026 15 |
-|  |
+| ✅ Diperbolehkan & Dianjurkan | ❌ Dilarang Keras |
+|---|---|
+| Brainstorming ide fitur & skenario kasus | Pengganti pemahaman konsep pribadi |
+| Eksplorasi alternatif solusi & arsitektur | Sumber kebenaran mutlak tanpa verifikasi |
+| Meminta penjelasan atas kode/error yang rumit | Memasukkan kode yang tidak dipahami ke proyek |
+| Membantu proses *debugging* & mencari akar masalah | Cara instan menghindari tahap analisis & perancangan |
+| Refactoring untuk kerapian kode | Menyalin solusi tugas secara membabi buta |
+| Pembuatan data *mocking* dan *test case* | Mengabaikan pengujian mandiri |
 
 ---
 
-## 📄 Halaman / Slide 16
+## ❓ 6. Prinsip 5 Pertanyaan Emas (*The 5-Question Principle*)
 
-Introduction to AI-Assisted Mobile Development
-AI-Assisted Development Workflow
-07/09/2026 16
-
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| AI-Assisted Development Workflow |
-| 07/09/2026 16 |
-|  |
+Sebelum Anda menyetujui (*accept*) atau memasukkan kode buatan AI ke dalam proyek, Anda **wajib** mampu menjawab 5 pertanyaan ini:
+1. **Apa yang dilakukan kode ini?** (*What does this code do?*)
+2. **Mengapa menggunakan pendekatan ini?** (*Why use this approach?*)
+3. **Bagaimana cara kerja teknisnya di balik layar?** (*How does this code work?*)
+4. **Apa risiko atau efek sampingnya?** (*What are the risks / edge cases?*)
+5. **Bagaimana cara menguji bahwa kode ini benar?** (*How do I test that this code is correct?*)
 
 ---
 
-## 📄 Halaman / Slide 17
+## 🏗️ 7. Fondasi Rekayasa Perangkat Lunak Mobile
 
-Introduction to AI-Assisted Mobile Development
-Limitations of AI Use
-Allowed Not Allowed
-Brainstorming; A replacement for student understanding;
-Solution exploration; A source of truth without verification;
-Code explanation; A reason to include code that is not understood;
-Debugging; A way to avoid analysis and design.
-Refactoring;
-Creating test cases;
-Documentation;
-Learning.
-07/09/2026 17
+### Ekosistem Platform Mobile
+* **Android:** Bahasa resmi Kotlin/Java, IDE Android Studio.
+* **iOS:** Bahasa resmi Swift/Objective-C, IDE Xcode.
+* **Cross-Platform (Multiplatform):** Flutter (bahasa Dart), React Native (JavaScript/TypeScript). Menghemat waktu karena 1 basis kode dapat berjalan di Android & iOS.
 
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| Limitations of AI Use Allowed Not Allowed Brainstorming; A replacement for student understanding; Solution exploration; A source of truth without verification; Code explanation; A reason to include code that is not understood; Debugging; A way to avoid analysis and design. Refactoring; Creating test cases; Documentation; Learning. |
-| 07/09/2026 17 |
-|  |
-
-| Allowed | Not Allowed |
-| --- | --- |
-| Brainstorming; Solution exploration; Code explanation; Debugging; Refactoring; Creating test cases; Documentation; Learning. | A replacement for student understanding; A source of truth without verification; A reason to include code that is not understood; A way to avoid analysis and design. |
+### Aspek Krusial Aplikasi Mobile:
+1. **UI & UX:** Antarmuka harus intuitif, responsif terhadap berbagai ukuran layar, dan mengikuti pedoman *Material Design* (Android) atau *Human Interface Guidelines* (iOS).
+2. **Konektivitas API:** Komunikasi data dengan RESTful API atau GraphQL menggunakan JSON.
+3. **Pengujian (*Testing*):** Pengujian unit, widget/komponen, dan pengujian integrasi alur kerja (*end-to-end*).
+4. **Distribusi & Pemeliharaan:** Persiapan rilis di Google Play Store / Apple App Store dan pembaruan rutin.
 
 ---
 
-## 📄 Halaman / Slide 18
+## 🔄 8. Siklus Hidup Pengembangan (SDLC) & Tren Masa Depan
 
-Introduction to AI-Assisted Mobile Development
-The 5-Question Principle
-Before accepting code from AI, students should be able to answer:
-• What does this code do?
-• Why use this approach?
-• How does this code work?
-• What are the risks?
-• How do I test that this code is correct?
-07/09/2026 18
+### Tahapan Standar SDLC:
+`Perencanaan (Planning)` ➔ `Analisis Kebutuhan` ➔ `Perancangan Desain` ➔ `Pengembangan (Coding)` ➔ `Pengujian (Testing)` ➔ `Penyebaran (Deployment)` ➔ `Pemeliharaan (Maintenance)`.
 
-|  |
-| --- |
-| Introduction to AI-Assisted Mobile Development |
-| The 5-Question Principle Before accepting code from AI, students should be able to answer: • What does this code do? • Why use this approach? • How does this code work? • What are the risks? • How do I test that this code is correct? |
-| 07/09/2026 18 |
-|  |
+### Model SDLC Populer:
+* **Waterfall:** Linier dan berurutan; cocok jika kebutuhan sudah sangat pasti.
+* **Agile / Scrum:** Iteratif dan adaptif; paling banyak digunakan dalam pengembangan mobile modern.
+* **RAD (Rapid Application Development):** Fokus pada pembuatan prototipe cepat.
+
+### Tren Mobile Terkini:
+* **AI & Machine Learning On-Device:** Pemrosesan AI lokal pada smartphone.
+* **Cross-Platform Frameworks:** Dominasi Flutter untuk efisiensi tim.
+* **Keamanan Data & Privasi:** Perlindungan ketat pada data sensitif pengguna.
+* **Dompet Digital & Pembayaran Terintegrasi (QRIS, Payment Gateway).**
 
 ---
 
-## 📄 Halaman / Slide 19
-
-Mobile Application Development
-Several basic concepts related to mobile application development:
-• Mobile Application Platforms: iOS and Android.
-• Programming Languages
-• iOS: Swift or Objective-C
-• Android: Java or Kotlin.
-• Integrated Development Environment (IDE)
-• For iOS, Xcode can be used
-• ForAndroid,Android Studio can be used.
-• User Interface (UI) and User Experience (UX): User interface (UI) and user experience (UX)
-design are important components of mobile application development. Applications should
-be easy to use, engaging, and responsive across different devices and screen sizes.
-07/09/2026 19
-
-|  |
-| --- |
-| Mobile Application Development |
-| Several basic concepts related to mobile application development: • Mobile Application Platforms: iOS and Android. • Programming Languages • iOS: Swift or Objective-C • Android: Java or Kotlin. • Integrated Development Environment (IDE) • For iOS, Xcode can be used • ForAndroid,Android Studio can be used. • User Interface (UI) and User Experience (UX): User interface (UI) and user experience (UX) design are important components of mobile application development. Applications should be easy to use, engaging, and responsive across different devices and screen sizes. |
-| 07/09/2026 19 |
-|  |
-
----
-
-## 📄 Halaman / Slide 20
-
-Mobile Application Development
-• API and Network Connectivity: Mobile applications often need to communicate with servers through an API
-(Application Programming Interface) to retrieve or send data.
-• Testing: Functional testing, device compatibility testing, and performance testing.
-• Documentation and Distribution: After developing an application, appropriate user documentation should be
-prepared and a suitable distribution method should be selected, such as the App Store (for iOS) or Google Play
-Store (for Android).
-• Updates and Maintenance: Applications need regular updates to fix bugs, improve performance, and add new
-features based on user feedback.
-• Application Development Life Cycle: Mobile application development involves an iterative cycle including
-planning, design, development, testing, and deployment.
-• Security: Developers need to understand good security practices to protect user data and prevent potential
-security issues.
-07/09/2026 20
-
-|  |
-| --- |
-| Mobile Application Development |
-| • API and Network Connectivity: Mobile applications often need to communicate with servers through an API (Application Programming Interface) to retrieve or send data. • Testing: Functional testing, device compatibility testing, and performance testing. • Documentation and Distribution: After developing an application, appropriate user documentation should be prepared and a suitable distribution method should be selected, such as the App Store (for iOS) or Google Play Store (for Android). • Updates and Maintenance: Applications need regular updates to fix bugs, improve performance, and add new features based on user feedback. • Application Development Life Cycle: Mobile application development involves an iterative cycle including planning, design, development, testing, and deployment. • Security: Developers need to understand good security practices to protect user data and prevent potential security issues. |
-| 07/09/2026 20 |
-|  |
-
----
-
-## 📄 Halaman / Slide 21
-
-Software Development Life Cycle
-SDLC, or Software Development Life Cycle, is a framework used in software
-development to manage the process of creating, maintaining, and
-developing software applications or systems.
-SDLC facilitates the systematic planning, design, development, testing, and management of software.
-While there are various SDLC models, the fundamental principles remain the same.
-07/09/2026 21
-
-|  |
-| --- |
-| Software Development Life Cycle |
-| SDLC, or Software Development Life Cycle, is a framework used in software development to manage the process of creating, maintaining, and developing software applications or systems. SDLC facilitates the systematic planning, design, development, testing, and management of software. While there are various SDLC models, the fundamental principles remain the same. |
-| 07/09/2026 21 |
-|  |
-
----
-
-## 📄 Halaman / Slide 22
-
-Software Development Life Cycle
-Common SDLC stages:
-• Planning
-• Analysis
-• Design
-• Development
-• Testing
-• Deployment
-• Maintenance
-• Evaluation
-07/09/2026 22
-
-|  |
-| --- |
-| Software Development Life Cycle |
-| Common SDLC stages: • Planning • Analysis • Design • Development • Testing • Deployment • Maintenance • Evaluation |
-| 07/09/2026 22 |
-|  |
-
----
-
-## 📄 Halaman / Slide 23
-
-Software Development Life Cycle
-• Model Waterfall
-Model
-• Model Agile
-• Model Iteratif
-SDLC
-• Model RAD (Rapid Application
-Development)
-07/09/2026 23
-
-|  |
-| --- |
-| Software Development Life Cycle |
-| • Model Waterfall Model • Model Agile • Model Iteratif SDLC • Model RAD (Rapid Application Development) |
-| 07/09/2026 23 |
-|  |
-
----
-
-## 📄 Halaman / Slide 24
-
-Mobile Application Trends & Evolution
-Several recent trends and developments in mobile applications:
-• Augmented Reality (AR) and Virtual Reality (VR);
-• Artificial Intelligence (AI) and Machine Learning (ML);
-• Internet of Things (IoT);
-• Cross-Platform Development;
-• Mobile Payments and Digital Wallets;
-• Health and Fitness Applications;
-• Business Mobility;
-• Game Application Development;
-• Others.
-07/09/2026 24
-
-|  |
-| --- |
-| Mobile Application Trends & Evolution |
-| Several recent trends and developments in mobile applications: • Augmented Reality (AR) and Virtual Reality (VR); • Artificial Intelligence (AI) and Machine Learning (ML); • Internet of Things (IoT); • Cross-Platform Development; • Mobile Payments and Digital Wallets; • Health and Fitness Applications; • Business Mobility; • Game Application Development; • Others. |
-| 07/09/2026 24 |
-|  |
-
----
-
-## 📄 Halaman / Slide 25
-
-Thank You
-
----
+## 🏁 Rangkuman Inti Modul 1
+* Pengembangan aplikasi mobile membutuhkan pemahaman mendalam tentang siklus hidup perangkat, responsivitas antarmuka, dan manajemen memori.
+* AI bertindak sebagai akselerator produktivitas, namun **kemampuan berpikir kritis, perancangan arsitektur, dan pemahaman logika kode tetap menjadi tanggung jawab mutlak mahasiswa.**
