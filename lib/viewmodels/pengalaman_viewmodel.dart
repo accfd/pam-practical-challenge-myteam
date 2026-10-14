@@ -87,7 +87,7 @@ class PengalamanViewModel extends ChangeNotifier {
     }
     final namaKecil = value.trim().toLowerCase();
     if (terdaftar.contains(namaKecil)) {
-      return 'Kegiatan "$value" sudah terdaftar di portofolio!';
+      return 'Kegiatan "$value" sudah terdaftar di daftar pengalaman!';
     }
     return null; // Mengembalikan null berarti data VALID (lolos seleksi)
   }

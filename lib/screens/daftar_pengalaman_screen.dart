@@ -79,7 +79,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
       // Feedback SnackBar (Pemberitahuan mengambang di bawah) mengonfirmasi keberhasilan
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Berhasil menambahkan "${result.namaKegiatan}" ke portofolio!'),
+          content: Text('Berhasil menambahkan "${result.namaKegiatan}" ke daftar pengalaman!'),
           backgroundColor: const Color(0xFF006400),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

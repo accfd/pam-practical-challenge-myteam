@@ -24,7 +24,7 @@ void main() {
       expect(PengalamanViewModel.validasiNamaKegiatan('PI'), 'Nama kegiatan minimal 3 karakter!');
       expect(
         PengalamanViewModel.validasiNamaKegiatan('PIMNAS', terdaftar: ['pimnas']),
-        'Kegiatan "PIMNAS" sudah terdaftar di portofolio!',
+        'Kegiatan "PIMNAS" sudah terdaftar di daftar pengalaman!',
       );
       expect(PengalamanViewModel.validasiNamaKegiatan('Gemastik', terdaftar: ['pimnas']), isNull);
     });
