@@ -5,22 +5,24 @@
 > **Nama Mahasiswa:** Fuadi Dhiyaulhaq  
 > **NIM:** 2411522001  
 > **Institusi:** Universitas Andalas  
+> **Pola Arsitektur:** **MVVM (Model - View - ViewModel)** *(Modul 3 Slide 18 & Modul 4 Slide 10)*  
 
 ---
 
 ## 📋 Daftar Isi
 1. [Ringkasan Proyek & Fitur](#-ringkasan-proyek--fitur)
-2. [Matriks Penilaian Rubrik (Target 100% - Skor 4/4)](#-matriks-penilaian-rubrik-target-100---skor-44)
-3. [Alur Workflow Lengkap (5 Tahapan Inti)](#-alur-workflow-lengkap-5-tahapan-inti)
+2. [Penerapan Arsitektur MVVM (Model-View-ViewModel)](#-penerapan-arsitektur-mvvm-model-view-viewmodel)
+3. [Matriks Penilaian Rubrik (Target 100% - Skor 4/4)](#-matriks-penilaian-rubrik-target-100---skor-44)
+4. [Alur Workflow Lengkap (5 Tahapan Inti)](#-alur-workflow-lengkap-5-tahapan-inti)
    - [Tahap 1: Input / Event](#tahap-1-input--event)
-   - [Tahap 2: State Management & Data Flow](#tahap-2-state-management--data-flow)
+   - [Tahap 2: State Management & Data Flow (ViewModel)](#tahap-2-state-management--data-flow-viewmodel)
    - [Tahap 3: Validation Logic & Error Handling](#tahap-3-validation-logic--error-handling)
    - [Tahap 4: Feedback Mechanism](#tahap-4-feedback-mechanism)
    - [Tahap 5: Navigation & Result Transfer](#tahap-5-navigation--result-transfer)
-4. [Diagram Alur Workflow (Mermaid Diagram)](#-diagram-alur-workflow-mermaid-diagram)
-5. [Struktur File & Arsitektur Kode](#-struktur-file--arsitektur-kode)
-6. [Panduan Menjalankan Aplikasi (Getting Started)](#-panduan-menjalankan-aplikasi-getting-started)
-7. [Panduan Khusus Demo & Code Review Dosen](#-panduan-khusus-demo--code-review-dosen)
+5. [Diagram Alur Workflow & Arsitektur MVVM (Mermaid)](#-diagram-alur-workflow--arsitektur-mvvm-mermaid)
+6. [Struktur File & Arsitektur Proyek](#-struktur-file--arsitektur-proyek)
+7. [Panduan Menjalankan Aplikasi (Getting Started)](#-panduan-menjalankan-aplikasi-getting-started)
+8. [Panduan Khusus Demo & Code Review Dosen](#-panduan-khusus-demo--code-review-dosen)
 
 ---
 
@@ -29,12 +31,44 @@
 **MyTeam App** adalah aplikasi mobile kolaborasi dan pencarian rekan tim mahasiswa Universitas Andalas (UNAND). Fitur yang diimplementasikan dalam tantangan ini adalah:
 
 **Fitur Tambah & Manajemen Riwayat Pengalaman Mahasiswa (Modul Portofolio - FR-05)**
-- Mahasiswa dapat melihat daftar pengalaman yang telah dimasukkan ke dalam portofolio.
+- Mahasiswa dapat melihat daftar riwayat pengalaman yang telah dimasukkan ke dalam portofolio.
 - Tampilan adaptif: mendukung **Empty State** (ketika belum ada data) dan **Populated Card View** (setelah ada data).
 - Alur pengisian form riwayat kegiatan (Nama Kegiatan, Peran, Tahun Pelaksanaan, dan Deskripsi Kontribusi).
 - Mekanisme validasi berlapis dan penanganan kesalahan secara *real-time*.
 - *Feedback* modal dialog interaktif dengan tema warna hijau khas UNAND (`#006400`).
-- Aliran pengiriman data bolak-balik antar layar (*two-way navigation data passing*).
+- Aliran pengiriman data bolak-balik antar layar (*two-way navigation data passing*) yang terintegrasi langsung dengan **ViewModel**.
+
+---
+
+## 🏛️ Penerapan Arsitektur MVVM (Model-View-ViewModel)
+
+Aplikasi ini dibangun menggunakan arsitektur **MVVM murni** sesuai dengan materi perkuliahan **Modul 3 (Slide 18)** dan pedoman **Modul 4 (Slide 10)** yang menganjurkan pemisahan tanggung jawab (*separation of concerns*) tanpa ketergantungan pada *third-party package* yang berlebihan:
+
+```text
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           ARSITEKTUR MVVM                               │
+├─────────────────────────────────────────────────────────────────────────┤
+│  1. VIEW (Presentation Layer)                                           │
+│     - lib/screens/daftar_pengalaman_screen.dart                         │
+│     - lib/screens/tambah_pengalaman_screen.dart                         │
+│     Tugas: Merender antarmuka UI, mendengarkan perubahan data melalui   │
+│            ListenableBuilder, dan menangkap event interaksi pengguna.   │
+│                                    ▲                                    │
+│                                    │ Notifies (notifyListeners)         │
+│                                    ▼ Calls methods                      │
+│  2. VIEWMODEL (Business Logic Layer)                                    │
+│     - lib/viewmodels/pengalaman_viewmodel.dart                          │
+│     Tugas: Mengelola UI state (List<PengalamanModel>), memicu notifikasi│
+│            reaktif (ChangeNotifier), dan menyediakan aksi bisnis.       │
+│                                    ▲                                    │
+│                                    │ Holds / Manipulates                │
+│                                    ▼                                    │
+│  3. MODEL (Data Layer)                                                  │
+│     - lib/models/pengalaman_model.dart                                  │
+│     Tugas: Merepresentasikan entitas data murni secara strongly-typed    │
+│            dengan dukungan fromJson dan toJson serialization.           │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -46,10 +80,10 @@ Dokumentasi dan kode aplikasi ini dirancang khusus untuk memenuhi kriteria **Exc
 |---|---|:---:|:---:|---|
 | 1 | **Kelengkapan Workflow** | **25%** | **4 (Excellent)** | Seluruh 5 fase alur (`Input/Event` $\rightarrow$ `State` $\rightarrow$ `Validation` $\rightarrow$ `Feedback` $\rightarrow$ `Navigation/Result`) terhubung sempurna tanpa diskontinuitas. |
 | 2 | **Implementasi & Fungsionalitas** | **25%** | **4 (Excellent)** | Fitur berjalan utuh dari halaman utama, pembukaan form, pengisian, validasi, feedback dialog, hingga render data kartu baru tanpa error/crash. |
-| 3 | **State & Data Flow** | **15%** | **4 (Excellent)** | Menggunakan `StatefulWidget`, `TextEditingController` untuk state lokal form, lifecycle clean up (`dispose`), serta `setState` untuk mutasi list reaktif `_listPengalaman`. |
+| 3 | **State & Data Flow** | **15%** | **4 (Excellent)** | Dikelola secara profesional melalui **`PengalamanViewModel`** (`ChangeNotifier`), didengarkan secara reaktif oleh `ListenableBuilder`, serta pembebasan memori `dispose()` yang tertib. |
 | 4 | **Validation** | **15%** | **4 (Excellent)** | Validasi komprehensif: field wajib diisi, validasi tipe numerik tahun (`int.tryParse`), dan validasi batas logis tahun kegiatan (`2000 <= tahun <= 2026`). |
-| 5 | **Feedback & Error Handling** | **10%** | **4 (Excellent)** | Feedback multi-kondisi: Inline error border merah dan pesan error saat invalid, serta custom animated-look dialog sukses saat data berhasil divalidasi. |
-| 6 | **Navigation / Result** | **10%** | **4 (Excellent)** | Navigasi forward via `Navigator.push<PengalamanModel>`, penutupan dialog via `Navigator.pop(ctx)`, dan pengembalian objek model data via `Navigator.pop(context, newPengalaman)` yang diterima kembali secara asinkron. |
+| 5 | **Feedback & Error Handling** | **10%** | **4 (Excellent)** | Feedback multi-kondisi: Inline error border merah dan pesan error saat invalid, serta custom modal dialog sukses saat data berhasil divalidasi. |
+| 6 | **Navigation / Result** | **10%** | **4 (Excellent)** | Navigasi forward via `Navigator.push<PengalamanModel>`, penutupan dialog via `Navigator.pop(ctx)`, dan pengembalian objek model data via `Navigator.pop(context, newPengalaman)` yang diteruskan ke ViewModel. |
 
 ---
 
@@ -58,7 +92,7 @@ Dokumentasi dan kode aplikasi ini dirancang khusus untuk memenuhi kriteria **Exc
 Alur fitur ini mengimplementasikan pola arsitektur *Event-driven* yang ketat sesuai panduan praktikum:
 
 ```text
-[Input / Event] ──► [State Mutation] ──► [Validation] ──► [Feedback] ──► [Navigation / Result]
+[Input / Event] ──► [State Mutation (ViewModel)] ──► [Validation] ──► [Feedback] ──► [Navigation / Result]
 ```
 
 ### Tahap 1: Input / Event
@@ -73,21 +107,17 @@ Alur fitur ini mengimplementasikan pola arsitektur *Event-driven* yang ketat ses
 
 ---
 
-### Tahap 2: State Management & Data Flow
+### Tahap 2: State Management & Data Flow (ViewModel)
 **Data atau kondisi apa yang berubah setelah event?**
-1. **Lokal Form State:**
-   - Ditangani oleh `GlobalKey<FormState> _formKey`.
-   - Masing-masing field dipantau secara real-time oleh `TextEditingController`:
-     - `_namaController`
-     - `_peranController`
-     - `_tahunController`
-     - `_deskripsiController`
+1. **Lokal Form State (View):**
+   - Ditangani oleh `GlobalKey<FormState> _formKey` dan 4 `TextEditingController` (`_namaController`, `_peranController`, `_tahunController`, `_deskripsiController`).
    - Manajemen siklus hidup memori dijaga dengan memanggil `controller.dispose()` di dalam `dispose()` method untuk mencegah kebocoran memori (*memory leaks*).
-2. **Data Entity Modeling:**
-   - Input teks diekstrak dan dibersihkan dari spasi kosong (`.trim()`), lalu dienkapsulasi ke dalam objek model strongly-typed `PengalamanModel`.
-3. **List State Mutation:**
-   - Layar utama mempertahankan *state* daftar pengalaman `final List<PengalamanModel> _listPengalaman = []`.
-   - Ketika data hasil kembali, fungsi `setState()` dipanggil untuk memperbarui UI dari kondisi `Empty State` menjadi daftar `Card` riwayat pengalaman.
+2. **Data Entity Modeling (Model):**
+   - Input teks diekstrak dan dibersihkan dari spasi kosong (`.trim()`), lalu dienkapsulasi ke dalam objek strongly-typed `PengalamanModel`.
+3. **Business Logic State Mutation (ViewModel):**
+   - `PengalamanViewModel` menampung state privat `List<PengalamanModel> _listPengalaman`.
+   - Ketika data hasil navigasi diterima, ViewModel mengeksekusi method `tambahPengalaman(result)` dan memanggil `notifyListeners()`.
+   - `ListenableBuilder` pada `DaftarPengalamanScreen` secara otomatis merender ulang UI, beralih dari `Empty State` menjadi daftar `Card` riwayat pengalaman baru.
 
 ---
 
@@ -121,7 +151,7 @@ Aplikasi menggunakan `_formKey.currentState!.validate()` dengan 3 lapisan aturan
    - Menampilkan modal popup dialog (`showDialog`) kustom bernuansa modern.
    - Dilengkapi ikon sukses (`Icons.check_circle_rounded`) dengan latar belakang hijau muda berpadu aksen hijau UNAND.
    - Pesan konfirmasi: `"Pengalaman disimpan!"`.
-   - Tombol aksi: `"Lihat Portofolio"` yang akan menutup dialog sekaligus mengarahkan pengguna kembali ke halaman utama.
+   - Tombol aksi: `"Lihat Daftar Pengalaman"` yang akan menutup dialog sekaligus mengarahkan pengguna kembali ke halaman utama.
 
 ---
 
@@ -143,79 +173,87 @@ Aplikasi menggunakan `_formKey.currentState!.validate()` dengan 3 lapisan aturan
    Navigator.pop(context, newPengalaman); // Mengembalikan objek model ke layar awal
    ```
 
-3. **Result Consumption & UI Update:**
+3. **Result Consumption & ViewModel State Update:**
    ```dart
    if (result != null) {
-     setState(() {
-       _listPengalaman.add(result);
-     });
+     _viewModel.tambahPengalaman(result); // ViewModel notifyListeners() -> Reaktif UI Rebuild
    }
    ```
-   Data yang dikembalikan ditambahkan ke dalam list, memicu render ulang widget (`rebuild`). Tampilan berubah seketika memperlihatkan kartu pengalaman baru lengkap dengan nama, peran bertema hijau, badge tahun, dan deskripsi tugas.
+   Data yang dikembalikan diteruskan ke `PengalamanViewModel`, memicu `notifyListeners()`. Tampilan `ListenableBuilder` secara otomatis memperlihatkan kartu pengalaman baru lengkap dengan nama, peran bertema hijau, badge tahun, dan deskripsi tugas.
 
 ---
 
-## 📊 Diagram Alur Workflow (Mermaid Diagram)
+## 📊 Diagram Alur Workflow & Arsitektur MVVM (Mermaid)
 
 ```mermaid
 flowchart TD
-    Start([Mulai: Buka MyTeam App]) --> ScreenDaftar[Layar Daftar Pengalaman]
-    ScreenDaftar --> CheckData{Apakah _listPengalaman kosong?}
-    CheckData -- Ya --> ShowEmpty[Tampilkan Empty State: 'Belum Ada Pengalaman']
-    CheckData -- Tidak --> ShowList[Tampilkan ListView Kartu Pengalaman]
-    
-    ShowEmpty --> TapTambah[User Tap Tombol 'Tambah Pengalaman']
-    ShowList --> TapTambah
-    
-    TapTambah --> NavPush[Navigator.push ke TambahPengalamanScreen]
-    NavPush --> FormScreen[Layar Form Tambah Pengalaman]
+    subgraph ViewLayer [Presentation Layer / Views]
+        ScreenDaftar[DaftarPengalamanScreen]
+        FormScreen[TambahPengalamanScreen]
+        ShowDialog[Feedback Dialog: 'Pengalaman disimpan!']
+    end
+
+    subgraph VMLayer [Business Logic Layer / ViewModel]
+        VM[PengalamanViewModel]
+        VMState[State: _listPengalaman]
+        VMAction[tambahPengalaman]
+    end
+
+    subgraph ModelLayer [Data Layer / Model]
+        ModelObj[PengalamanModel Entity]
+    end
+
+    Start([Mulai: Buka Aplikasi]) --> ScreenDaftar
+    ScreenDaftar -. Menyimak State .-> VMState
+    ScreenDaftar --> TapTambah[User Tap 'Tambah Pengalaman']
+    TapTambah --> NavPush[Navigator.push]
+    NavPush --> FormScreen
     
     FormScreen --> UserInput[User Mengisi Form: Nama, Peran, Tahun, Deskripsi]
-    UserInput --> TapSimpan[User Tap Tombol 'Simpan Pengalaman']
+    UserInput --> TapSimpan[User Tap 'Simpan Pengalaman']
     
-    TapSimpan --> ValidateCheck{Form Validasi: _formKey.currentState.validate?}
+    TapSimpan --> ValidateCheck{Form Validasi: _formKey.validate?}
     
-    ValidateCheck -- Gagal / Tidak Valid --> ShowError[Feedback Error: Tampilkan Pesan Merah di Field Terkait]
+    ValidateCheck -- Gagal / Invalid --> ShowError[Feedback Error: Tampilkan Pesan Merah di Field]
     ShowError --> FormScreen
     
-    ValidateCheck -- Berhasil / Valid --> PackModel[Bungkus Input ke Objek PengalamanModel]
-    PackModel --> ShowDialog[Feedback Success: Tampilkan Modal Dialog 'Pengalaman disimpan!']
-    ShowDialog --> TapLihat[User Tap Tombol 'Lihat Portofolio']
+    ValidateCheck -- Berhasil / Valid --> PackModel[Bungkus Input ke PengalamanModel]
+    PackModel --> ModelObj
+    PackModel --> ShowDialog
+    ShowDialog --> TapLihat[User Tap 'Lihat Daftar Pengalaman']
     
     TapLihat --> PopDialog[Navigator.pop dialog]
     PopDialog --> PopResult[Navigator.pop context, newPengalaman]
     
-    PopResult --> CatchResult[DaftarPengalamanScreen Menerima result != null]
-    CatchResult --> UpdateState[setState: _listPengalaman.add result]
-    UpdateState --> RenderNewCard[UI Otomatis Render Kartu Baru di Portofolio]
+    PopResult --> CatchResult[DaftarPengalamanScreen Terima Result]
+    CatchResult --> PassToVM[Panggil: _viewModel.tambahPengalaman result]
+    PassToVM --> VMAction
+    VMAction --> VMState
+    VMState -. notifyListeners .-> RenderNewCard[ListenableBuilder Otomatis Render Kartu Baru]
     RenderNewCard --> Finish([Selesai: Workflow Lengkap Terpenuhi])
 ```
 
 ---
 
-## 📁 Struktur File & Arsitektur Kode
+## 📁 Struktur File & Arsitektur Proyek
+
+Struktur proyek mencerminkan pemisahan layer **MVVM murni** yang bersih:
 
 ```text
 myteam_app/
 ├── lib/
 │   ├── main.dart                          # Titik masuk utama aplikasi & konfigurasi tema UNAND
 │   ├── models/
-│   │   └── pengalaman_model.dart          # Kelas model data entitas riwayat pengalaman mahasiswa
+│   │   └── pengalaman_model.dart          # [MODEL] Entitas data pengalaman mahasiswa & serialisasi JSON
+│   ├── viewmodels/
+│   │   └── pengalaman_viewmodel.dart      # [VIEWMODEL] Pengelola state & logika bisnis (ChangeNotifier)
 │   └── screens/
-│       ├── daftar_pengalaman_screen.dart  # Layar 1: Daftar Pengalaman (Empty State, List View, Navigasi)
-│       └── tambah_pengalaman_screen.dart  # Layar 2: Form Input, Validasi Berlapis, Feedback Dialog
+│       ├── daftar_pengalaman_screen.dart  # [VIEW] Layar daftar pengalaman (ListenableBuilder, Empty State, List)
+│       └── tambah_pengalaman_screen.dart  # [VIEW] Layar form input, validasi berlapis & dialog feedback
 ├── test/
 │   └── widget_test.dart                   # Smoke test widget otomatis untuk memverifikasi fungsionalitas UI
 └── README.md                              # Dokumentasi lengkap alur kerja & rubrik penilaian
 ```
-
-### Rincian Komponen Kode:
-- **`lib/models/pengalaman_model.dart`**:
-  Berisi atribut `namaKegiatan`, `peran`, `tahun`, dan `deskripsi`. Seluruh properti bersifat `final` untuk menjaga *immutability* data.
-- **`lib/screens/daftar_pengalaman_screen.dart`**:
-  Mengatur logika tampilan daftar, penanganan empty state yang menarik dengan icon informatif, serta inisiasi pemanggilan `Navigator.push` dan penerimaan *result callback*.
-- **`lib/screens/tambah_pengalaman_screen.dart`**:
-  Berisi form input dengan `TextFormField`, konfigurasi `TextEditingController`, validasi teks & numerik, serta pembuatan dialog feedback konfirmasi.
 
 ---
 
@@ -255,17 +293,20 @@ Sesuai ketentuan tugas, pada sesi demo dosen akan mengajukan pertanyaan dan memb
 
 ### 1. Pertanyaan Umum Dosen & Jawaban Konseptual
 
+* **Q: Mengapa kamu menggunakan arsitektur MVVM di proyek ini?**  
+  * **A:** Sesuai materi **Modul 3 Slide 18**, MVVM memisahkan tanggung jawab (*separation of concerns*) antara Presentation Layer (`screens/`), Business Logic Layer (`viewmodels/`), dan Data Layer (`models/`). UI tidak lagi mengotori kodenya dengan logika penyimpanan data, melainkan didelegasikan ke `PengalamanViewModel`.
+
+* **Q: Mengapa menggunakan `ChangeNotifier` dan `ListenableBuilder` sebagai ViewModel, bukan package eksternal?**  
+  * **A:** Sesuai pedoman **Modul 4 Slide 10**, pada tahap ini mahasiswa diarahkan untuk menguasai manajemen state interaktif bawaan Flutter sebelum memperkenalkan package pihak ketiga. `ChangeNotifier` dan `ListenableBuilder` adalah solusi resmi bawaan Flutter SDK yang ringan, reaktif, dan bebas dependensi tambahan.
+
 * **Q: Mengapa menggunakan `Navigator.push<PengalamanModel>` dengan generic type?**  
   * **A:** Generic type `<PengalamanModel>` memastikan keamanan tipe (*type safety*). Dengan begitu, variabel `result` yang dikembalikan dari `await Navigator.push` otomatis dikenali sebagai `PengalamanModel?`, sehingga terhindar dari *runtime type error*.
 
 * **Q: Apa fungsi `_formKey.currentState!.validate()`?**  
   * **A:** Memeriksa seluruh callback `validator` pada setiap `TextFormField` yang berada di dalam lingkup `Form(key: _formKey)`. Jika semua fungsi mengembalikan `null`, maka form dinyatakan valid (`true`). Jika ada yang mengembalikan `String`, teks error tersebut akan langsung dirender dan fungsi bernilai `false`.
 
-* **Q: Mengapa `TextEditingController` harus di-`dispose`?**  
-  * **A:** `TextEditingController` mendengarkan perubahan input dari sistem operasi dan mengonsumsi memori. Memanggil `.dispose()` saat widget dibuang memastikan tidak terjadi *memory leak*.
-
-* **Q: Bagaimana mekanisme pengiriman balik data dari Screen 2 ke Screen 1?**  
-  * **A:** Pada Screen 2, kita memanggil `Navigator.pop(context, newPengalaman)` di mana parameter kedua adalah data yang dikirimkan. Di Screen 1, pemanggilan `await Navigator.push(...)` akan menangkap data tersebut ke dalam variabel `result`, lalu dimasukkan ke dalam `List` menggunakan `setState()`.
+* **Q: Mengapa `TextEditingController` dan `PengalamanViewModel` harus di-`dispose`?**  
+  * **A:** Keduanya mendengarkan perubahan (*listeners*) dan mengonsumsi memori. Memanggil `.dispose()` saat widget dibuang memastikan tidak terjadi *memory leak*.
 
 ---
 
@@ -287,20 +328,13 @@ Jika dosen meminta perubahan langsung pada kode saat demo, berikut contekan cepa
     }
     ```
 
-* **Tantangan B: "Coba ganti Dialog Feedback menjadi SnackBar di halaman daftar."**  
-  * *Buka:* `lib/screens/daftar_pengalaman_screen.dart` pada fungsi `_navigateToAddScreen()`.  
-  * *Tambahkan setelah `setState`:*
+* **Tantangan B: "Coba tambahkan filter atau method baru di ViewModel."**  
+  * *Buka:* `lib/viewmodels/pengalaman_viewmodel.dart`.  
+  * *Tambahkan method baru, misalnya:*
     ```dart
-    if (result != null) {
-      setState(() {
-        _listPengalaman.add(result);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Berhasil menambahkan ${result.namaKegiatan}!'),
-          backgroundColor: const Color(0xFF006400),
-        ),
-      );
+    void hapusSemua() {
+      _listPengalaman.clear();
+      notifyListeners();
     }
     ```
 
@@ -316,4 +350,4 @@ Jika dosen meminta perubahan langsung pada kode saat demo, berikut contekan cepa
 
 ---
 
-*Disusun secara komprehensif dan profesional untuk memenuhi seluruh indikator capaian pembelajaran praktikum Mobile Programming.*
+*Disusun secara komprehensif dan profesional untuk memenuhi seluruh indikator capaian pembelajaran praktikum Mobile Programming dengan arsitektur MVVM murni.*
