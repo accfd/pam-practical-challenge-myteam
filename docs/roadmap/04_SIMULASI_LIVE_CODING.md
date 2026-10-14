@@ -59,58 +59,132 @@
 ---
 
 ## 🛠️ SKENARIO 3: DOSEN MEMINTA MENAMBAH FIELD BARU ("PENYELENGGARA")
-> **Instruksi Dosen:** *"Coba tambahkan satu inputan baru: Penyelenggara Kegiatan (misal: Kemendikbud, HMIF, dll)."*
+> **Instruksi Dosen:** *"Coba tambahkan satu field input baru: Penyelenggara Kegiatan (misal: Kemendikbud, HMIF, BEM, dll) dan tampilkan di kartu halaman utama!"*
 
-### Langkah Eksekusi Terstruktur:
-1. **Langkah 1: Tambah properti di Model (`lib/models/pengalaman_model.dart`):**
-   ```dart
-   class PengalamanModel {
-     final String namaKegiatan;
-     final String peran;
-     final String tahun;
-     final String deskripsi;
-     final String penyelenggara; // <-- Tambah ini
+> [!TIP]
+> **Trik Rahasia Mahasiswa Cerdas (Anti-Error):**
+> Gunakan nilai default `this.penyelenggara = ''` di Model. Jangan gunakan `required`! Dengan cara ini, file pengujian otomatis (`test/widget_test.dart`) dan kode lama tidak akan mendadak merah/error compile karena ketiadaan parameter.
 
-     PengalamanModel({
-       required this.namaKegiatan,
-       required this.peran,
-       required this.tahun,
-       required this.deskripsi,
-       required this.penyelenggara, // <-- Tambah ini
-     });
-   ```
-2. **Langkah 2: Tambah controller di Form (`lib/screens/tambah_pengalaman_screen.dart`):**
-   ```dart
-   final _penyelenggaraController = TextEditingController(); // Deklarasi
+---
 
-   @override
-   void dispose() {
-     _penyelenggaraController.dispose(); // Jangan lupa dispose! (Poin plus di mata dosen)
-     ...
-   }
-   ```
-3. **Langkah 3: Tambah TextFormField di Form:**
-   ```dart
-   TextFormField(
-     controller: _penyelenggaraController,
-     decoration: _buildInputDecoration(hintText: 'Masukkan penyelenggara', icon: Icons.business),
-     validator: (v) => v == null || v.isEmpty ? 'Penyelenggara wajib diisi!' : null,
-   ),
-   ```
-4. **Langkah 4: Masukkan ke objek PengalamanModel saat simpan:**
-   ```dart
-   final newPengalaman = PengalamanModel(
-     namaKegiatan: _namaController.text.trim(),
-     peran: _peranController.text.trim(),
-     tahun: _tahunController.text.trim(),
-     deskripsi: _deskripsiController.text.trim(),
-     penyelenggara: _penyelenggaraController.text.trim(), // <-- Masukkan ini
-   );
-   ```
-5. **Langkah 5: Tampilkan di Kartu (`lib/screens/daftar_pengalaman_screen.dart`):**
-   ```dart
-   Text('Penyelenggara: ${item.penyelenggara}'),
-   ```
+### Langkah Eksekusi Lengkap (Runtut 3 File):
+
+#### 1. File 1: Model (`lib/models/pengalaman_model.dart`)
+Tambahkan atribut `penyelenggara` dengan default value:
+```dart
+class PengalamanModel {
+  final String namaKegiatan;
+  final String peran;
+  final String tahun;
+  final String deskripsi;
+  final String penyelenggara; // 1. Tambah variabel properti
+
+  PengalamanModel({
+    required this.namaKegiatan,
+    required this.peran,
+    required this.tahun,
+    required this.deskripsi,
+    this.penyelenggara = '', // 2. Tambah di constructor (beri default '')
+  });
+
+  factory PengalamanModel.fromJson(Map<String, dynamic> json) {
+    return PengalamanModel(
+      namaKegiatan: json['namaKegiatan'] as String? ?? '',
+      peran: json['peran'] as String? ?? '',
+      tahun: json['tahun'] as String? ?? '',
+      deskripsi: json['deskripsi'] as String? ?? '',
+      penyelenggara: json['penyelenggara'] as String? ?? '', // 3. Tambah di fromJson
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'namaKegiatan': namaKegiatan,
+      'peran': peran,
+      'tahun': tahun,
+      'deskripsi': deskripsi,
+      'penyelenggara': penyelenggara, // 4. Tambah di toJson
+    };
+  }
+}
+```
+
+---
+
+#### 2. File 2: Form Tambah (`lib/screens/tambah_pengalaman_screen.dart`)
+Ada 4 titik yang perlu disentuh:
+
+* **Titik A (Deklarasi Controller - di bawah `_tahunController`):**
+  ```dart
+  final _penyelenggaraController = TextEditingController();
+  ```
+
+* **Titik B (Dispose - di dalam `dispose()`):**
+  ```dart
+  _penyelenggaraController.dispose();
+  ```
+
+* **Titik C (Form Input Widget - letakkan di bawah TextFormField Tahun):**
+  ```dart
+  const SizedBox(height: 16),
+  const Text('Penyelenggara', style: TextStyle(fontWeight: FontWeight.w600)),
+  const SizedBox(height: 8),
+  TextFormField(
+    controller: _penyelenggaraController,
+    enabled: !_isLoading,
+    decoration: _buildInputDecoration(
+      hintText: 'Contoh: Kemendikbud / HMIF UNAND',
+      icon: Icons.business_outlined,
+    ),
+    validator: (value) {
+      if (value == null || value.trim().isEmpty) {
+        return 'Penyelenggara wajib diisi!';
+      }
+      return null;
+    },
+  ),
+  ```
+
+* **Titik D (Kirim Data - di method `_submitForm()` saat membuat `PengalamanModel`):**
+  ```dart
+  final newPengalaman = PengalamanModel(
+    namaKegiatan: namaInput,
+    peran: peranInput,
+    tahun: tahunInput,
+    deskripsi: _deskripsiController.text.trim(),
+    penyelenggara: _penyelenggaraController.text.trim(), // <-- Tambahkan baris ini
+  );
+  ```
+
+---
+
+#### 3. File 3: Tampilan Kartu (`lib/screens/daftar_pengalaman_screen.dart`)
+Tampilkan data penyelenggara di dalam kartu pengalaman (di bawah baris Tahun):
+```dart
+// 3. Tahun Pelaksanaan
+Row(
+  children: [
+    const Icon(Icons.calendar_today_outlined, color: Colors.grey, size: 16),
+    const SizedBox(width: 6),
+    Text(item.tahun, style: const TextStyle(color: Colors.grey)),
+  ],
+),
+
+// TAMBAHKAN INI (Penyelenggara):
+if (item.penyelenggara.isNotEmpty) ...[
+  const SizedBox(height: 4),
+  Row(
+    children: [
+      const Icon(Icons.business_outlined, color: Colors.grey, size: 16),
+      const SizedBox(width: 6),
+      Text(
+        item.penyelenggara,
+        style: const TextStyle(color: Colors.grey, fontSize: 13),
+      ),
+    ],
+  ),
+],
+```
 
 ---
 
@@ -127,3 +201,4 @@
 
 ---
 👉 **Langkah Selanjutnya:** Pelajari cara menyusun prompt ke AI jika dosen menyuruhmu menggunakan AI untuk menyelesaikan modifikasi di atas: [**05_FORMULA_PROMPTING_AI.md**](./05_FORMULA_PROMPTING_AI.md).
+
