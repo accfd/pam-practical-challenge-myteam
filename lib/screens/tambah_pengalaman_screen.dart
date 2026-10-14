@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../models/pengalaman_model.dart';
 
 class TambahPengalamanScreen extends StatefulWidget {
@@ -91,7 +91,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                     Navigator.pop(context, newPengalaman);
                   },
                   child: const Text(
-                    'Lihat Portofolio',
+                    'Lihat Daftar Pengalaman',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -149,7 +149,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Detail Portofolio',
+                  'Detail Pengalaman',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
