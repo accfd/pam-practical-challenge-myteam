@@ -3,7 +3,7 @@ import '../models/pengalaman_model.dart';
 import '../viewmodels/pengalaman_viewmodel.dart';
 import 'tambah_pengalaman_screen.dart';
 
-/// Layar utama menampilkan daftar portofolio pengalaman mahasiswa (View 1)
+// View 1: Layar utama portofolio riwayat pengalaman mahasiswa (MVVM)
 class DaftarPengalamanScreen extends StatefulWidget {
   const DaftarPengalamanScreen({super.key});
 
@@ -12,22 +12,21 @@ class DaftarPengalamanScreen extends StatefulWidget {
 }
 
 class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
-  // Instance ViewModel sebagai Single Source of Truth
+  // Instance ViewModel terpusat (Single Source of Truth)
   final PengalamanViewModel _viewModel = PengalamanViewModel();
 
   @override
   void dispose() {
-    _viewModel.dispose();
+    _viewModel.dispose(); // Membebaskan listener di memori
     super.dispose();
   }
 
-  /// Navigasi ke Form Tambah Pengalaman dan penanganan data hasil kembalian
+  // Navigasi ke form tambah pengalaman (Forward passing data & menerima result)
   void _navigateToAddScreen() async {
     final result = await Navigator.push<PengalamanModel>(
       context,
       MaterialPageRoute(
         builder: (ctx) => TambahPengalamanScreen(
-          // Forward Data Passing: meneruskan data untuk validasi duplikasi cerdas
           pengalamanTerdaftar: _viewModel.listPengalaman,
         ),
       ),
@@ -35,7 +34,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
 
     if (!mounted) return;
 
-    // 1. Kondisi Sukses Simpan: tambah data ke ViewModel & tampilkan SnackBar hijau
+    // Respon navigasi result
     if (result != null) {
       _viewModel.tambahPengalaman(result);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,9 +45,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       );
-    }
-    // 2. Kondisi Batal: pengguna kembali tanpa menyimpan
-    else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Penambahan pengalaman dibatalkan'),
@@ -62,7 +59,7 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ListenableBuilder merender ulang UI secara efisien saat ViewModel memanggil notifyListeners()
+    // ListenableBuilder: Merender ulang widget di dalamnya saat notifyListeners() dipanggil
     return ListenableBuilder(
       listenable: _viewModel,
       builder: (context, _) {
@@ -90,19 +87,15 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
               ],
             ),
           ),
+
+          // Tampilan adaptif: Empty State saat kosong, ListView saat ada data
           body: _viewModel.isEmpty
-              // ==============================================================================
-              // TAMPILAN 1: EMPTY STATE (Kondisi saat belum ada pengalaman tersimpan)
-              // ==============================================================================
-              // Menghindari layar putih polos yang membingungkan dengan memberikan ilustrasi,
-              // badge informasi, pesan ramah, dan tombol aksi yang jelas.
               ? Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Ikon informatif dengan lingkaran berlatar belakang hijau muda
                         Container(
                           width: 96,
                           height: 96,
@@ -117,8 +110,6 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-
-                        // Badge status jumlah pengalaman
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 4),
@@ -132,7 +123,6 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-
                         const Text(
                           'Belum Ada Pengalaman',
                           style: TextStyle(
@@ -141,15 +131,12 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-
                         const Text(
                           'Tambahkan riwayat kegiatan, kepanitiaan organisasi, kompetisi, atau riset kampus untuk melengkapi portofolio dan menarik rekan tim terbaik di UNAND.',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.grey, height: 1.4),
                         ),
                         const SizedBox(height: 24),
-
-                        // Tombol pemicu event tambah pengalaman pada kondisi kosong
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
@@ -176,14 +163,11 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
                     ),
                   ),
                 )
-              // ==============================================================================
-              // TAMPILAN 2: RESULT STATE (ListView Builder saat data sudah terisi)
-              // ==============================================================================
+              // Tampilan 2: ListView saat data sudah ada
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: _viewModel.totalPengalaman,
                   itemBuilder: (ctx, index) {
-                    // Mengambil item model dari ViewModel berdasarkan indeks
                     final item = _viewModel.listPengalaman[index];
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16),

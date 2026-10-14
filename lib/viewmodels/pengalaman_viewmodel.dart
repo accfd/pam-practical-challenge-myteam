@@ -1,35 +1,27 @@
 import 'package:flutter/foundation.dart';
 import '../models/pengalaman_model.dart';
 
-/// ViewModel untuk mengelola state riwayat pengalaman dan logika validasi (MVVM)
+// ViewModel: Mengelola state riwayat pengalaman dan logika bisnis validasi (MVVM)
 class PengalamanViewModel extends ChangeNotifier {
-  // State privat kumpulan pengalaman di memori lokal
+  // State privat: Data riwayat pengalaman yang tersimpan di memori
   final List<PengalamanModel> _listPengalaman = [];
 
-  /// Getter data pengalaman berstatus Read-Only
+  // Getter list bersifat read-only untuk menjaga integritas data
   List<PengalamanModel> get listPengalaman => List.unmodifiable(_listPengalaman);
 
-  /// Getter daftar nama kegiatan (lowercase)
-  List<String> get daftarNamaKegiatan =>
-      _listPengalaman.map((item) => item.namaKegiatan.toLowerCase().trim()).toList();
-
-  /// Pemeriksa kondisi data kosong
+  // Getter pembantu status data
   bool get isEmpty => _listPengalaman.isEmpty;
-
-  /// Total pengalaman tersimpan
   int get totalPengalaman => _listPengalaman.length;
 
-  /// Menambahkan pengalaman baru dan memberitahu UI listener untuk rebuild
+  // Aksi menambah pengalaman baru dan memberitahu UI untuk rebuild
   void tambahPengalaman(PengalamanModel pengalaman) {
     _listPengalaman.add(pengalaman);
     notifyListeners();
   }
 
-  // ==============================================================================
-  // ATURAN VALIDASI BISNIS (UNIT-TESTABLE)
-  // ==============================================================================
+  // --- ATURAN VALIDASI BISNIS (UNIT-TESTABLE) ---
 
-  /// Validasi nama kegiatan: Wajib diisi & minimal 3 karakter
+  // Validasi nama kegiatan: Wajib diisi dan minimal 3 karakter
   static String? validasiNamaKegiatan(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Nama kegiatan wajib diisi!';
@@ -40,7 +32,30 @@ class PengalamanViewModel extends ChangeNotifier {
     return null;
   }
 
-  /// Validasi anti-duplikasi cerdas: Menolak jika nama, peran, dan tahun ketiganya sama persis
+  // Validasi peran: Wajib diisi
+  static String? validasiPeran(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Peran wajib diisi!';
+    }
+    return null;
+  }
+
+  // Validasi tahun: Wajib diisi, format angka valid, dan rentang 2000-2026
+  static String? validasiTahun(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Tahun wajib diisi!';
+    }
+    final int? tahun = int.tryParse(value.trim());
+    if (tahun == null) {
+      return 'Tahun harus berupa angka valid!';
+    }
+    if (tahun < 2000 || tahun > 2026) {
+      return 'Masukkan tahun antara 2000 - 2026!';
+    }
+    return null;
+  }
+
+  // Anti-duplikasi cerdas: Menolak hanya jika nama, peran, dan tahun sama persis
   static bool isDuplikatKombinasi({
     required String nama,
     required String peran,
@@ -54,28 +69,5 @@ class PengalamanViewModel extends ChangeNotifier {
         item.namaKegiatan.trim().toLowerCase() == n &&
         item.peran.trim().toLowerCase() == p &&
         item.tahun.trim() == t);
-  }
-
-  /// Validasi peran: Wajib diisi
-  static String? validasiPeran(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Peran wajib diisi!';
-    }
-    return null;
-  }
-
-  /// Validasi tahun: Wajib diisi, angka valid, dan rentang 2000-2026
-  static String? validasiTahun(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Tahun wajib diisi!';
-    }
-    final int? tahun = int.tryParse(value.trim());
-    if (tahun == null) {
-      return 'Tahun harus berupa angka valid!';
-    }
-    if (tahun < 2000 || tahun > 2026) {
-      return 'Masukkan tahun antara 2000 - 2026!';
-    }
-    return null;
   }
 }

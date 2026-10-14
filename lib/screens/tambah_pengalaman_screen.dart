@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../models/pengalaman_model.dart';
 import '../viewmodels/pengalaman_viewmodel.dart';
 
-/// Layar form interaktif untuk menambahkan pengalaman baru (View 2)
+// View 2: Form input riwayat pengalaman mahasiswa (MVVM)
 class TambahPengalamanScreen extends StatefulWidget {
-  // Menerima data daftar pengalaman dari layar awal untuk validasi anti-duplikasi
+  // Data kiriman dari layar sebelumnya untuk validasi anti-duplikasi
   final List<PengalamanModel> pengalamanTerdaftar;
 
   const TambahPengalamanScreen({
@@ -18,17 +18,17 @@ class TambahPengalamanScreen extends StatefulWidget {
 
 class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final _namaController = TextEditingController();
   final _peranController = TextEditingController();
   final _tahunController = TextEditingController();
   final _deskripsiController = TextEditingController();
 
+  // State loading untuk feedback proses penyimpanan
   bool _isLoading = false;
 
   @override
   void dispose() {
-    // Membebaskan controller untuk mencegah kebocoran memori (Memory Leak)
+    // Membersihkan controller untuk mencegah memory leak
     _namaController.dispose();
     _peranController.dispose();
     _tahunController.dispose();
@@ -36,10 +36,11 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     super.dispose();
   }
 
+  // Aksi submit form: Validasi, loading, dialog sukses, dan pengembalian data
   void _submitForm() async {
-    FocusScope.of(context).unfocus();
+    FocusScope.of(context).unfocus(); // Menutup keyboard
 
-    // 1. Validasi field dasar (Required, Min Length, Valid Number)
+    // 1. Validasi field formulir
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -48,7 +49,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     final peranInput = _peranController.text.trim();
     final tahunInput = _tahunController.text.trim();
 
-    // 2. Validasi anti-duplikasi cerdas kombinasi nama + peran + tahun
+    // 2. Validasi anti-duplikasi cerdas (kombinasi nama + peran + tahun)
     final isDuplikat = PengalamanViewModel.isDuplikatKombinasi(
       nama: namaInput,
       peran: peranInput,
@@ -70,7 +71,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
       return;
     }
 
-    // 3. Feedback status proses (Loading spinner)
+    // 3. Feedback proses (loading spinner)
     setState(() {
       _isLoading = true;
     });
@@ -83,14 +84,15 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
       _isLoading = false;
     });
 
+    // 4. Membungkus data ke model
     final newPengalaman = PengalamanModel(
-      namaKegiatan: _namaController.text.trim(),
-      peran: _peranController.text.trim(),
-      tahun: _tahunController.text.trim(),
+      namaKegiatan: namaInput,
+      peran: peranInput,
+      tahun: tahunInput,
       deskripsi: _deskripsiController.text.trim(),
     );
 
-    // 4. Feedback status sukses (Modal Dialog) & pengembalian data ke layar utama
+    // 5. Feedback sukses modal dialog dan pengembalian data via Navigator.pop
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -137,9 +139,8 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(ctx);
-                  // Backward Result Passing: mengembalikan objek ke layar sebelumnya
-                  Navigator.pop(context, newPengalaman);
+                  Navigator.pop(ctx); // Menutup dialog
+                  Navigator.pop(context, newPengalaman); // Mengembalikan data ke layar utama
                 },
                 child: const Text(
                   'Lihat Daftar Pengalaman',
@@ -250,7 +251,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 4. Field Deskripsi Kontribusi
+                // 4. Field Deskripsi Kontribusi (Opsional)
                 const Text('Deskripsi Kontribusi',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
@@ -277,7 +278,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Tombol Simpan dengan Status Loading
+                // Tombol Simpan dengan loading spinner
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -330,6 +331,7 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
     );
   }
 
+  // Helper dekorasi input field dengan border merah saat error
   InputDecoration _buildInputDecoration({
     required String hintText,
     required IconData icon,
@@ -349,7 +351,6 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
       ),
-      // Visual feedback border merah saat invalid
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Colors.red),
