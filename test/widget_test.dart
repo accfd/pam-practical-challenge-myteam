@@ -82,6 +82,18 @@ void main() {
       expect(PengalamanViewModel.validasiTahun('2027'), 'Masukkan tahun antara 2000 - 2026!');
       expect(PengalamanViewModel.validasiTahun('2024'), isNull);
     });
+
+    test('Validasi Deskripsi: Opsional, namun jika diisi maksimal 3000 karakter', () {
+      expect(PengalamanViewModel.validasiDeskripsi(null), isNull);
+      expect(PengalamanViewModel.validasiDeskripsi(''), isNull);
+      expect(PengalamanViewModel.validasiDeskripsi('Pengalaman memimpin divisi humas'), isNull);
+      // Karakter tepat 3000 -> Valid
+      final teks3000 = 'a' * 3000;
+      expect(PengalamanViewModel.validasiDeskripsi(teks3000), isNull);
+      // Karakter 3001 -> Ditolak
+      final teks3001 = 'a' * 3001;
+      expect(PengalamanViewModel.validasiDeskripsi(teks3001), 'Deskripsi maksimal 3000 karakter!');
+    });
   });
 
   // Widget Test: Alur workflow lengkap aplikasi

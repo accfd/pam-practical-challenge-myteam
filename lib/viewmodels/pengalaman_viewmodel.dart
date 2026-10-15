@@ -55,6 +55,14 @@ class PengalamanViewModel extends ChangeNotifier {
     return null;
   }
 
+  // Validasi deskripsi: Bersifat opsional, namun jika diisi maksimal 3000 karakter
+  static String? validasiDeskripsi(String? value) {
+    if (value != null && value.trim().length > 3000) {
+      return 'Deskripsi maksimal 3000 karakter!';
+    }
+    return null;
+  }
+
   // Anti-duplikasi cerdas: Menolak hanya jika nama, peran, dan tahun sama persis
   static bool isDuplikatKombinasi({
     required String nama,

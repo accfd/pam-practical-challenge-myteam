@@ -163,11 +163,13 @@ class _TambahPengalamanScreenState extends State<TambahPengalamanScreen> {
                 controller: _deskripsiController,
                 enabled: !_isLoading,
                 maxLines: 4,
+                maxLength: 3000,
                 decoration: const InputDecoration(
                   labelText: 'Deskripsi Kontribusi (Opsional)',
-                  hintText: 'Tuliskan rincian tugas dan kontribusi Anda...',
+                  hintText: 'Tuliskan rincian tugas dan kontribusi Anda (maksimal 3000 karakter)...',
                   alignLabelWithHint: true,
                 ),
+                validator: PengalamanViewModel.validasiDeskripsi,
               ),
               const SizedBox(height: 24),
 
