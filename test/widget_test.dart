@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:myteam_app/main.dart';
-import 'package:myteam_app/models/pengalaman_model.dart';
 import 'package:myteam_app/viewmodels/pengalaman_viewmodel.dart';
 
 void main() {
