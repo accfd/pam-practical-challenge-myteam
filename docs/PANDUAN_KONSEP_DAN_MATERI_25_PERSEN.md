@@ -28,7 +28,82 @@
 
 ---
 
-## 🔥 2. PERTANYAAN POPULER PENGUJIAN: STATEFUL VS STATELESS WIDGET
+## 📖 2. KAMUS DEFINISI BAKU 5 TAHAPAN WORKFLOW (SESUAI SILABUS PAM)
+
+Dosen sering menanyakan: *"Coba sebutkan dan jelaskan apa itu 5 tahapan workflow dalam aplikasi mobile dan tunjukkan contohnya di kodingan kamu!"*
+
+Berikut adalah definisi ilmiah baku beserta implementasi konkretnya di MyTeam:
+
+```text
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ [1. Input/Event] ──► [2. State] ──► [3. Validation] ──► [4. Feedback] ──► [5. Result] │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 1️⃣ TAHAP 1: EVENT / USER INPUT (Aksi & Masukan Pengguna)
+* **Definisi Ilmiah:**  
+  > *"Aksi fisik atau interaksi langsung pengguna terhadap elemen antarmuka (UI) yang dideteksi oleh sistem dan memicu eksekusi fungsi/metode tertentu melalui event listener atau callback function."*
+* **Implementasi di Flutter:**  
+  Menggunakan callback seperti `onPressed` pada button, `onTap` pada gestur sentuh, atau pemantauan teks menggunakan `TextEditingController`.
+* **Kodingan Konkret di MyTeam:**  
+  1. Tombol Tambah diketuk: `onPressed: _navigateToAddScreen` di [lib/screens/daftar_pengalaman_screen.dart:L108](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/daftar_pengalaman_screen.dart#L108)  
+  2. Pengguna mengetik data pada 4 `TextFormField` melalui `_namaController`, `_peranController`, `_tahunController`, dan `_deskripsiController`.  
+  3. Tombol Simpan diklik: `onPressed: _isLoading ? null : _submitForm` di [lib/screens/tambah_pengalaman_screen.dart:L178](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L178)
+
+---
+
+### 2️⃣ TAHAP 2: STATE (Manajemen Keadaan & Data Aplikasi)
+* **Definisi Ilmiah:**  
+  > *"Kumpulan data atau informasi yang disimpan di dalam memori aplikasi pada suatu waktu tertentu, yang nilainya bersifat dinamis (dapat berubah selama runtime), dan perubahan nilainya menentukan bagaimana antarmuka (UI) digambar ulang (rebuild)."*
+* **Implementasi di Flutter:**  
+  Terbagi menjadi dua tingkat:  
+  - **Ephemeral State (State Lokal UI):** State sementara dalam satu widget (misal animasi, loading status).  
+  - **App/Business State:** Data inti aplikasi yang dikelola terpisah di layer logika bisnis (ViewModel).
+* **Kodingan Konkret di MyTeam:**  
+  1. **State Lokal UI:** `bool _isLoading = false` di [lib/screens/tambah_pengalaman_screen.dart:L25](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L25) yang dimutasi dengan `setState()` saat proses simpan data.  
+  2. **State Bisnis:** `List<PengalamanModel> _listPengalaman` di [lib/viewmodels/pengalaman_viewmodel.dart:L15](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/viewmodels/pengalaman_viewmodel.dart#L15) yang dikelola dengan `ChangeNotifier` dan memicu `notifyListeners()`.
+
+---
+
+### 3️⃣ TAHAP 3: VALIDATION (Validasi Integritas Data & Aturan Bisnis)
+* **Definisi Ilmiah:**  
+  > *"Proses pemeriksaan, verifikasi, dan penegakan aturan terhadap data masukan pengguna untuk memastikan data tersebut lengkap, sesuai tipe data, berada dalam rentang yang sah, serta mematuhi aturan bisnis (business rules) sebelum diproses lebih lanjut."*
+* **Implementasi di Flutter:**  
+  Menggunakan `Form` yang dikendalikan oleh `GlobalKey<FormState>`, pemanggilan fungsi `validator: (value) => ...`, serta fungsi pengecekan logika bisnis di ViewModel.
+* **Kodingan Konkret di MyTeam:**  
+  1. **Validasi Form UI:** `_formKey.currentState!.validate()` di [lib/screens/tambah_pengalaman_screen.dart:L38](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L38) yang mengecek nama min 3 karakter, peran wajib diisi, dan tahun aman via `int.tryParse()`.  
+  2. **Validasi Logika Bisnis (Anti-Duplikasi):** Memeriksa kombinasi unik `nama + peran + tahun` lewat `PengalamanViewModel.isDuplikatKombinasi(...)` di [lib/viewmodels/pengalaman_viewmodel.dart:L46](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/viewmodels/pengalaman_viewmodel.dart#L46).
+
+---
+
+### 4️⃣ TAHAP 4: FEEDBACK (Umpan Balik Visual & Komunikasi Pengguna)
+* **Definisi Ilmiah:**  
+  > *"Respon visual, grafis, atau konfirmasi langsung yang diberikan sistem kepada pengguna agar pengguna mengetahui status terkini aplikasi (apakah aksi sedang diproses, berhasil disimpan, atau ditolak karena kesalahan input)."*
+* **Implementasi di Flutter:**  
+  Diberikan melalui teks error inline di bawah input, animasi progress bar/spinner, SnackBar mengambang, serta modal dialog pop-up.
+* **Kodingan Konkret di MyTeam:**  
+  1. **Feedback Loading:** Tombol berubah menampilkan `CircularProgressIndicator` putih selama jeda 700ms di [lib/screens/tambah_pengalaman_screen.dart:L181](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L181).  
+  2. **Feedback Error Input:** Teks merah inline di bawah input field (*"Nama kegiatan minimal 3 karakter!"*).  
+  3. **Feedback Error Bisnis:** `SnackBar` merah berlatar belakang bahaya saat input data terdeteksi ganda di [lib/screens/tambah_pengalaman_screen.dart:L53](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L53).  
+  4. **Feedback Sukses:** Pop-up modal `AlertDialog` konfirmasi sukses simpan di [lib/screens/tambah_pengalaman_screen.dart:L75](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L75) dan `SnackBar` hijau di beranda.
+
+---
+
+### 5️⃣ TAHAP 5: NAVIGATION & RESULT (Navigasi Antar Layar & Penerimaan Hasil)
+* **Definisi Ilmiah:**  
+  > *"Mekanisme perpindahan rute antarmuka di dalam tumpukan layar (navigation stack) yang mendukung komunikasi data dua arah (Two-Way Data Passing), yaitu mengirim data ke layar tujuan (Push) dan mengembalikan data hasil modifikasi ke layar pemanggil (Pop Result) untuk memperbarui tampilan."*
+* **Implementasi di Flutter:**  
+  Menggunakan kelas `Navigator` melalui metode `Navigator.push<T>()` untuk menumpuk rute baru dan `Navigator.pop(context, result)` untuk menutup rute sambil mengirimkan objek hasil kembali ke pemanggil.
+* **Kodingan Konkret di MyTeam:**  
+  1. **Push & Tunggu Hasil (Forward):** Layar utama memanggil `final result = await Navigator.push<PengalamanModel>(...)` di [lib/screens/daftar_pengalaman_screen.dart:L25](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/daftar_pengalaman_screen.dart#L25).  
+  2. **Pop Bawa Data (Backward Result):** Form ditutup sambil mengembalikan objek entitas baru via `Navigator.pop(context, newPengalaman)` di [lib/screens/tambah_pengalaman_screen.dart:L84](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L84).  
+  3. **Update UI (Reactivity):** Data baru dimasukkan ke ViewModel (`_viewModel.tambahPengalaman(result)`), dan widget `ListenableBuilder` langsung menggambar ulang kartu portofolio baru di layar utama!
+
+---
+
+## 🔥 3. PERTANYAAN POPULER PENGUJIAN: STATEFUL VS STATELESS WIDGET
 
 > **Pertanyaan Dosen (Sering Keluar pada Teman-teman):**  
 > *"Layar ini StatefulWidget atau StatelessWidget? Kenapa kamu memilih itu? Apa bedanya?"*
