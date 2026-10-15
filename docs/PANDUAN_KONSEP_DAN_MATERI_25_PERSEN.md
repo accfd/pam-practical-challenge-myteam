@@ -61,7 +61,65 @@
 
 ---
 
-## 📚 3. BANK PERTANYAAN MATERI DARI 4 MODUL KULIAH
+## ⚡ 3. PERTANYAAN JEBAKAN POPULER: `setState()`, `onPressed` VS `onClick`
+
+Berikut adalah 3 pertanyaan jebakan yang baru saja ditanyakan dosen kepada teman-teman saat sesi review:
+
+---
+
+### ❓ JEBAKAN 1: "Kenapa di Flutter pakainya `onPressed` atau `onTap`? Kenapa bukan `onClick` kayak di Web atau Android Native?"
+
+* **Jawaban Mantap Mahasiswa (Fuadi):**  
+  > *"Izin menjawab Pak/Bu. Ada 2 alasan fundamental:*  
+  > 1. ***Paradigma Touchscreen vs Mouse Pointer:*** *Di web atau desktop (`onClick`), interaksi berbasis klik kursor mouse fisik. Sedangkan di perangkat mobile, layarnya adalah **layar sentuh (touchscreen gesture)**. Pada layar sentuh, gestur manusia terbagi menjadi banyak variasi: ketukan cepat (**tap**), penekanan tombol (**press**), sentuhan lama (**long press**), dan seretan (**drag/pan**).*  
+  > 2. ***Konvensi Penamaan Widget Flutter:***  
+  >    - *Tombol bertipe Material (`ElevatedButton`, `TextButton`, `IconButton`) menggunakan **`onPressed`** karena merepresentasikan tombol fisik/virtual yang ditekan dan memiliki animasi elevasi/pegas saat ditekan.*  
+  >    - *Widget gestur sentuh umum (`InkWell`, `GestureDetector`, `ListTile`) menggunakan **`onTap`** karena mendeteksi ketukan jari pada permukaan layar.*  
+  >    - *Flutter sengaja tidak memakai kata `onClick` untuk membedakan paradigma gestur mobile dengan event pointer web browser."*
+* **Kode Bukti:**  
+  - `onPressed: _isLoading ? null : _submitForm` di [lib/screens/tambah_pengalaman_screen.dart: baris 178](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L178)  
+  - `onPressed: _navigateToAddScreen` di [lib/screens/daftar_pengalaman_screen.dart: baris 108](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/daftar_pengalaman_screen.dart#L108)
+
+---
+
+### ❓ JEBAKAN 2: "Bagaimana cara kerja `setState()` di balik layar (Under the Hood)? Kapan boleh dan kapan GAK BOLEH pakai `setState()`?"
+
+* **Jawaban Mantap Mahasiswa (Fuadi):**  
+  > *"Izin menjawab Pak/Bu:*  
+  > 1. ***Cara Kerja di Balik Layar:*** *Ketika `setState(() { ... })` dipanggil:*  
+  >    - *Flutter pertama-tama mengeksekusi fungsi callback untuk mengubah nilai variabel state (misal `_isLoading = true`).*  
+  >    - *Lalu secara internal, Flutter menandai elemen widget tersebut sebagai **'dirty'** (`element.markNeedsBuild()`).*  
+  >    - *Pada frame render berikutnya (60fps/120fps), Flutter memanggil ulang method **`build()`** untuk merender ulang subtree widget tersebut.*  
+  > 2. ***Kapan BOLEH dipakai?*** *Hanya untuk **Ephemeral State (State Lokal UI)** di dalam satu layar, contohnya toggle status loading `_isLoading`, animasi switch, atau menampilkan/menyembunyikan password.*  
+  > 3. ***Kapan TIDAK BOLEH dipakai?*** *Jangan gunakan `setState()` untuk mengelola data bisnis aplikasi (seperti daftar portofolio pengalaman mahasiswa). Jika dipakai untuk data global, seluruh widget tree layar akan ter-rebuild secara boros, dan logika data akan bercampur kotor di file tampilan (melanggar prinsip Separation of Concerns). Untuk data bisnis, kita wajib menggunakan **`ChangeNotifier` + `ListenableBuilder`** di ViewModel!"*
+* **Kode Bukti:** Panggilan `setState(() => _isLoading = true)` di [lib/screens/tambah_pengalaman_screen.dart: baris 70](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L70)
+
+---
+
+### ❓ JEBAKAN 3: "Kenapa tombol Simpan kamu bisa otomatis disabled (mati/abu-abu) saat loading?"
+
+* **Jawaban Mantap Mahasiswa (Fuadi):**  
+  > *"Izin menjawab Pak/Bu. Itu adalah mekanisme bawaan widget Material Button di Flutter. Pada kode saya:*  
+  > ```dart
+  > onPressed: _isLoading ? null : _submitForm,
+  > ```  
+  > *Ketika `_isLoading == true`, property `onPressed` kami operasikan nilai **`null`**.*  
+  > *Di Flutter, jika sebuah button diberi nilai `onPressed: null`, button tersebut secara otomatis dinonaktifkan (disabled), tidak bisa diklik lagi oleh user untuk **mencegah double-submission**, dan warna latar belakangnya otomatis diredupkan oleh framework sesuai spesifikasi Material 3."*
+* **Kode Bukti:** [lib/screens/tambah_pengalaman_screen.dart: baris 178](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/lib/screens/tambah_pengalaman_screen.dart#L178)
+
+---
+
+### ❓ JEBAKAN 4: "Apa bedanya `GestureDetector` dengan `InkWell`?"
+
+* **Jawaban Mantap Mahasiswa (Fuadi):**  
+  > *"Keduanya sama-sama widget untuk menangkap gestur sentuhan (`onTap`, `onDoubleTap`, dll).*  
+  > *Perbedaannya:*  
+  > - ***`InkWell`*** *adalah widget Material yang memberikan efek visual sentuhan berupa animasi gelombang air (**Splash / Ripple Effect**) saat disentuh (membutuhkan ancestor `Material`).*  
+  > - ***`GestureDetector`*** *adalah pendeteksi gestur murni yang tidak memiliki efek visual apa pun secara default, tetapi mendukung gestur kompleks seperti drag, pan, dan scale (cubit zoom)."*
+
+---
+
+## 📚 4. BANK PERTANYAAN MATERI DARI 4 MODUL KULIAH
 
 Berikut adalah kemungkinan pertanyaan konsep yang sangat sering diajukan dosen berdasarkan silabus Modul 1 s.d. Modul 4:
 
