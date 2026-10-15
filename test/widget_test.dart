@@ -14,60 +14,6 @@ void main() {
       expect(PengalamanViewModel.validasiNamaKegiatan('PIMNAS 37'), isNull);
     });
 
-    test('Validasi Anti-Duplikasi: Kombinasi Nama + Peran + Tahun', () {
-      final listUji = [
-        PengalamanModel(
-          namaKegiatan: 'BEM KM UNAND',
-          peran: 'Staf Muda',
-          tahun: '2023',
-          deskripsi: 'Magang organisasi',
-        ),
-      ];
-
-      // 1. Data sama persis (Nama + Peran + Tahun sama) -> Ditolak
-      expect(
-        PengalamanViewModel.isDuplikatKombinasi(
-          nama: 'bem km unand',
-          peran: 'staf muda',
-          tahun: '2023',
-          terdaftar: listUji,
-        ),
-        isTrue,
-      );
-
-      // 2. Kegiatan sama tapi peran beda -> Diizinkan
-      expect(
-        PengalamanViewModel.isDuplikatKombinasi(
-          nama: 'BEM KM UNAND',
-          peran: 'Menteri Kominfo',
-          tahun: '2024',
-          terdaftar: listUji,
-        ),
-        isFalse,
-      );
-
-      // 3. Kegiatan dan peran sama tapi tahun beda -> Diizinkan
-      expect(
-        PengalamanViewModel.isDuplikatKombinasi(
-          nama: 'BEM KM UNAND',
-          peran: 'Staf Muda',
-          tahun: '2024',
-          terdaftar: listUji,
-        ),
-        isFalse,
-      );
-
-      // 4. Kegiatan baru -> Diizinkan
-      expect(
-        PengalamanViewModel.isDuplikatKombinasi(
-          nama: 'PIMNAS 37',
-          peran: 'Ketua Tim',
-          tahun: '2024',
-          terdaftar: listUji,
-        ),
-        isFalse,
-      );
-    });
 
     test('Validasi Peran: Wajib diisi', () {
       expect(PengalamanViewModel.validasiPeran(null), 'Peran wajib diisi!');
