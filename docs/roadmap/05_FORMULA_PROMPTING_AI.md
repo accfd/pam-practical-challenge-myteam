@@ -1,91 +1,178 @@
-# 🟢 CHECKPOINT 05: FORMULA PROMPTING AI CODING ASSISTANT
-> **Target Skor:** 20 Poin (Kemampuan Pemanfaatan AI dalam Pemrograman)  
-> **Fokus Utama:** Menyusun prompt yang jelas, spesifik, memiliki konteks, dan menghasilkan kode yang relevan sesuai panduan **Modul 2 Slide 24**.
+# 🟢 CHECKPOINT 05: FORMULA PROMPTING AI CODING ASSISTANT (METODE R-C-T-C-O)
+> **Mata Kuliah:** Pengembangan Aplikasi Mobile (Semester 5) — Universitas Andalas  
+> **Target Skor:** **4 Poin (Excellent)** pada Rubrik Kemampuan Pemanfaatan AI (**Bobot 20%**)  
+> **Fokus Utama:** Menyusun prompt yang jelas, spesifik, memiliki konteks, batasan teknis kuat, dan menghasilkan solusi relevan sesuai panduan **Modul 2 Slide 24** dan kaidah **R-C-T-C-O**.
 
 ---
 
 ## 🏆 STANDAR PENILAIAN RUBRIK AI (BOBOT 20%)
 
-| Skor | Kriteria Rubrik | Apa yang Dilihat Dosen? |
-|:---:|---|---|
-| **4 (Excellent)** | **Prompt jelas, spesifik, memiliki konteks, dan menghasilkan solusi relevan.** | Mahasiswa tidak cuma menulis satu kalimat pendek, melainkan memberikan konteks file, tujuan spesifik, dan batasan arsitektur. |
-| **3 (Good)** | Prompt cukup jelas dan solusi yang dihasilkan sesuai. | Prompt lumayan jelas tetapi ada konteks yang terlewat. |
-| **2 (Fair)** | Prompt masih umum/kurang konteks dan perlu beberapa kali perbaikan. | Prompt terlalu pendek (misal: *"perbaiki error ini"*). |
-| **1 (Poor)** | Tidak mampu menyusun prompt yang relevan atau memahami hasil AI. | Tidak tahu cara meminta tolong ke AI secara terarah. |
+| Skor | Kriteria Rubrik | Apa yang Dilihat Dosen? | Strategi Mencapai Skor |
+|:---:|---|---|---|
+| **4 (Excellent)** | **Prompt jelas, spesifik, memiliki konteks, dan menghasilkan solusi relevan.** | Mahasiswa tidak cuma menulis satu kalimat pendek, melainkan memberikan konteks file, tujuan spesifik, arsitektur, dan batasan teknis. | Gunakan **Metode R-C-T-C-O** secara lengkap! |
+| **3 (Good)** | Prompt cukup jelas dan solusi yang dihasilkan sesuai. | Prompt lumayan jelas tetapi ada konteks atau batasan yang terlewat. | Hanya menyebutkan tugas dan nama file tanpa batasan arsitektur. |
+| **2 (Fair)** | Prompt masih umum/kurang konteks dan perlu beberapa kali perbaikan. | Prompt terlalu pendek (misal: *"perbaiki error ini"* atau *"pindahin tombolnya"*). | Bolak-balik merevisi prompt karena hasil AI salah. |
+| **1 (Poor)** | Tidak mampu menyusun prompt yang relevan atau memahami hasil AI. | Tidak tahu cara meminta tolong ke AI secara terarah atau bengong. | Tidak menggunakan struktur prompt apa pun. |
 
 ---
 
-## 📐 FORMULA PROMPTING RESMI (MODUL 2 SLIDE 24)
+## 📐 FORMULA PROMPTING RESMI: METODE R-C-T-C-O
 
-$$\mathbf{PROMPT} = \mathbf{ROLE} + \mathbf{TASK} + \mathbf{CONTEXT} + \mathbf{CONSTRAINTS}$$
+$$\mathbf{PROMPT} = \mathbf{Role} + \mathbf{Context} + \mathbf{Task} + \mathbf{Constraints} + \mathbf{Output}$$
 
-1. **ROLE (Peran):** Tetapkan siapa AI bertindak (misal: *"Sebagai Flutter mobile developer ahli arsitektur MVVM"*).
-2. **TASK (Tugas):** Apa tindakan spesifik yang harus dilakukan (misal: *"Tolong tambahkan field baru 'penyelenggara'..."*).
-3. **CONTEXT (Konteks):** Beritahu kondisi aplikasi saat ini dan nama file terkait (misal: *"Pada aplikasi MyTeam fitur portofolio mahasiswa di file lib/models/pengalaman_model.dart..."*).
-4. **CONSTRAINTS (Batasan):** Apa yang tidak boleh dilanggar (misal: *"Tetap pertahankan Sound Null Safety, jangan ubah method lain, dan pastikan controller baru di-dispose"*).
+1. **ROLE (Peran):** Tetapkan siapa AI bertindak (misal: *"Bertindaklah sebagai Senior Flutter Developer."*).
+2. **CONTEXT (Konteks Proyek):** Kondisi aplikasi dan file terkait (misal: *"Saya sedang membangun aplikasi Flutter 'MyTeam' untuk portofolio mahasiswa UNAND dengan Material 3 dan arsitektur MVVM di file lib/screens/tambah_pengalaman_screen.dart"*).
+3. **TASK (Tugas Spesifik):** Instruksi perubahan dari dosen secara presisi (misal: *"Pindahkan tombol 'Simpan Pengalaman' ke posisi paling atas form sebelum input judul"*).
+4. **CONSTRAINTS (Batasan Aturan):** Apa yang tidak boleh dilanggar (misal: *"Gunakan Sound Null Safety, pertahankan validasi _formKey, pertahankan loading indicator, jangan pakai package baru"*).
+5. **OUTPUT (Format Luaran):** Format hasil yang diminta (misal: *"Berikan potongan kode Dart yang bersih beserta perbandingan before vs after"*).
 
 ---
 
-## 📋 TEMPLATE PROMPT SIAP PAKAI SAAT LIVE-CODING
+## 📋 KUMPULAN PROMPT SIAP PAKAI SAAT LIVE CODING DENGAN DOSEN
 
-Jika dosen meminta kamu membuat prompt ke AI Coding Assistant di depannya, buka AI dan gunakan template di bawah ini:
-
-### 1. Template: Mengubah Aturan Validasi
+### 1. Kasus Spontan: Memindahkan Tombol Simpan ke Atas Form (Kasus Nyata Pengujian)
 ```text
-Sebagai mobile developer Flutter profesional, tolong modifikasi aturan validasi tahun pada file lib/viewmodels/pengalaman_viewmodel.dart.
+Role:
+Bertindaklah sebagai Senior Flutter Developer.
 
-Konteks: Saat ini validasi menerima tahun antara 2000 hingga 2026.
-Tugas: Ubah batas tahun yang diizinkan menjadi antara 2010 hingga 2030, serta perbarui pesan peringatan error-nya menjadi 'Masukkan tahun antara 2010 - 2030!'.
-Batasan: Jangan mengubah fungsi validasi lainnya dan pertahankan penanganan safe numeric parsing (int.tryParse).
+Context:
+Saya sedang mengembangkan aplikasi Flutter 'MyTeam' pada file lib/screens/tambah_pengalaman_screen.dart. Saat ini tombol 'Simpan Pengalaman' (ElevatedButton) berada di posisi paling bawah ListView form.
+
+Task:
+Pindahkan widget tombol 'Simpan Pengalaman' ke posisi paling atas form, yaitu tepat sebelum input TextFormField 'Judul Pengalaman'. Berikan jarak SizedBox(height: 16) di bawah tombol.
+
+Constraints:
+- Pertahankan validasi FormState (_formKey.currentState!.validate()) dan pemanggilan ViewModel.
+- Pastikan loading indicator (_isLoading ? CircularProgressIndicator : Text) tetap berfungsi.
+- Gunakan Sound Null Safety.
+
+Output:
+Berikan potongan kode ListView form sebelum dan sesudah dipindahkan.
 ```
 
 ---
 
-### 2. Template: Menambahkan Field Input Baru
+### 2. Kasus Spontan: Memindahkan Tombol Tambah ke AppBar (Layar Utama)
 ```text
-Sebagai software engineer Flutter ahli, tolong bantu saya menambahkan field baru 'penyelenggara' pada aplikasi ini.
+Role:
+Bertindaklah sebagai Senior Flutter Developer.
 
-Konteks: Aplikasi menggunakan pola arsitektur Pure MVVM (Model di lib/models/pengalaman_model.dart, Form di lib/screens/tambah_pengalaman_screen.dart, dan Daftar di lib/screens/daftar_pengalaman_screen.dart).
-Tugas:
-1. Tambahkan atribut final String penyelenggara pada class PengalamanModel.
-2. Tambahkan TextEditingController dan TextFormField 'Penyelenggara' (wajib diisi) pada form.
-3. Tampilkan penyelenggara tersebut di dalam widget Card pada layar daftar pengalaman.
-Batasan: Terapkan Immutability, Sound Null Safety (required), dan pastikan controller baru di-dispose dengan benar di method dispose().
+Context:
+Pada file lib/screens/daftar_pengalaman_screen.dart di aplikasi 'MyTeam', saya ingin memindahkan aksi tambah portofolio.
+
+Task:
+Tambahkan tombol aksi di AppBar (property actions) berupa IconButton dengan icon Icons.add. Ketika diklik, arahkan pengguna ke TambahPengalamanScreen dan tangani return value untuk disimpan ke ViewModel.
+
+Constraints:
+- Gunakan async-await saat Navigator.push.
+- Pertahankan tampilan Empty State di body.
+
+Output:
+Tampilkan kode AppBar yang telah dimodifikasi.
 ```
 
 ---
 
-### 3. Template: Mengubah Respon Feedback Visual
+### 3. Kasus Spontan: Mengubah Aturan Validasi Tahun
 ```text
-Sebagai frontend Flutter developer, tolong ubah mekanisme feedback sukses pada file lib/screens/tambah_pengalaman_screen.dart.
+Role:
+Bertindaklah sebagai Senior Flutter Developer.
 
-Konteks: Saat ini ketika form berhasil disubmit, aplikasi menampilkan popup AlertDialog (Modal Dialog).
-Tugas: Ganti AlertDialog tersebut sehingga setelah jeda loading 700ms selesai, layar form langsung melakukan Navigator.pop(context, newPengalaman) kembali ke halaman utama.
-Batasan: Objek newPengalaman tetap harus dikembalikan ke layar pemanggil agar kartu baru tetap ter-render di halaman beranda.
+Context:
+Pada aplikasi Flutter 'MyTeam', logika validasi form dipisahkan di file lib/viewmodels/pengalaman_viewmodel.dart sesuai arsitektur MVVM.
+
+Task:
+Modifikasi fungsi 'validateTahun(String? value)' agar hanya menerima rentang tahun antara 2010 sampai 2030 (inklusif). Jika di luar rentang itu atau bukan angka, kembalikan pesan: 'Masukkan tahun valid antara 2010 - 2030!'.
+
+Constraints:
+- Wajib menggunakan int.tryParse() untuk safe numeric parsing.
+- Pertahankan pengecekan string kosong.
+- Jangan mengubah method lainnya.
+
+Output:
+Berikan kode fungsi validateTahun yang sudah diperbarui.
 ```
 
 ---
 
-### 4. Template: Mengatasi Error / Debugging
+### 4. Kasus Spontan: Menambahkan Field Baru 'Penyelenggara'
 ```text
-Sebagai Flutter debugging specialist, tolong bantu saya menganalisis dan memperbaiki error berikut:
-[Paste pesan error dari terminal/log]
+Role:
+Bertindaklah sebagai Senior Flutter Developer.
 
-Konteks: Error ini muncul saat tombol Simpan ditekan pada layar TambahPengalamanScreen.
-Tugas: Jelaskan penyebab error secara ringkas dan berikan potongan kode solusinya.
-Batasan: Berikan solusi yang langsung memperbaiki root cause tanpa merusak alur data passing antar screen.
+Context:
+Aplikasi Flutter 'MyTeam' menggunakan arsitektur MVVM dengan file:
+1. lib/models/pengalaman_model.dart
+2. lib/screens/tambah_pengalaman_screen.dart
+3. lib/screens/daftar_pengalaman_screen.dart
+
+Task:
+Tambahkan field baru 'penyelenggara' (String):
+1. Tambahkan pada PengalamanModel dengan default value '' agar backward compatible.
+2. Tambahkan controller dan TextFormField 'Penyelenggara' pada TambahPengalamanScreen.
+3. Tampilkan penyelenggara pada Card pengalaman di DaftarPengalamanScreen.
+
+Constraints:
+- Semua atribut model harus final (immutable).
+- Controller baru wajib di-dispose di method dispose().
+- Sound Null Safety aktif.
+
+Output:
+Berikan potongan kode perubahan untuk model, form screen, dan card item.
 ```
 
 ---
 
-## ❌ CONTOH SALAH VS ✅ CONTOH BENAR DI DEPAN DOSEN
+### 5. Kasus Spontan: Mengganti Dialog Pop-up Menjadi SnackBar
+```text
+Role:
+Bertindaklah sebagai Senior Flutter Developer.
 
-* ❌ **Contoh Salah (Prompt Malas & Kurang Konteks - Nilai Rendah):**
-  > *"Tolong ubah validasi tahunnya dong jadi 2030."*  
-  *(AI bisa salah mengubah file atau merusak arsitektur MVVM karena tidak diberi tahu nama file dan batasannya).*
+Context:
+Pada file lib/screens/tambah_pengalaman_screen.dart, aplikasi menampilkan AlertDialog setelah form sukses disimpan.
 
-* ✅ **Contoh Benar (Prompt Profesional Sesuai Formula - Nilai Maksimal 4 Poin):**
-  > *"Sebagai Flutter developer, tolong ubah batas validasi tahun pada file lib/viewmodels/pengalaman_viewmodel.dart agar menerima tahun 2010 sampai 2030. Pertahankan int.tryParse dan pesan error yang deskriptif."*
+Task:
+Hapus AlertDialog tersebut. Ganti alurnya sehingga setelah proses simpan selesai, langsung memanggil Navigator.pop(context, newPengalaman) dan tampilkan SnackBar hijau bertuliskan 'Pengalaman berhasil ditambahkan!'.
+
+Constraints:
+- Gunakan 'if (!mounted) return;' sebelum memanggil context.
+- Objek newPengalaman tetap harus di-return agar data baru langsung muncul di layar utama.
+
+Output:
+Tampilkan potongan kode method _submitForm yang telah diperbarui.
+```
 
 ---
-🎉 **Selamat!** Kamu sudah memiliki 5 modul roadmap persiapan yang super lengkap. Kamu siap menghadapi sesi tatap muka dan meraih skor sempurna 100! 🚀🎓
+
+### 6. Kasus Spontan: Mengatasi Error Debugging (Live Error Fixing)
+```text
+Role:
+Bertindaklah sebagai Flutter Debugging Specialist.
+
+Context:
+Setelah memodifikasi file [Nama File], muncul pesan error berikut di debug console:
+---
+[PASTE PESAN ERROR]
+---
+
+Task:
+1. Jelaskan penyebab error secara ringkas (1-2 kalimat).
+2. Berikan perbaikan kode yang tepat pada baris yang bermasalah.
+
+Constraints:
+- Perbaiki hanya pada root cause error tanpa merombak struktur komponen lainnya.
+
+Output:
+Tunjukkan perbaikan kodenya beserta penjelasan letak barisnya.
+```
+
+---
+
+## 🗣️ CARA MENJELASKAN KE DOSEN SAAT REVIEW (HAFALKAN INI!)
+
+> *"Pak/Bu, dalam menyusun prompt untuk AI Coding Assistant, saya selalu menerapkan **Metode R-C-T-C-O**, yaitu mendefinisikan **Role** (Senior Flutter Dev), **Context** (proyek MyTeam, arsitektur MVVM, file terkait), **Task** (tugas spesifik seperti memindahkan tombol ke atas), **Constraints** (batasan seperti Sound Null Safety, pemanggilan _formKey validate, dan tanpa library baru), serta **Output** (kode bersih before-after). Dengan formula ini, AI langsung memberikan solusi yang 100% tepat dan tidak merusak arsitektur aplikasi."*
+
+---
+
+> [!TIP]
+> Dokumentasi lengkap dengan komparasi before-after kode tersedia di [docs/PANDUAN_PROMPTING_AI_RCTCO.md](file:///d:/%23%23%20SEMESTER%205/Pengembangan%20Aplikasi%20Mobile/PRACTICAL%20CHALLENGE/myteam_app/docs/PANDUAN_PROMPTING_AI_RCTCO.md).
