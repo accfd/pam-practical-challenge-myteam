@@ -11,6 +11,7 @@ Folder ini berisi 5 modul belajar terstruktur untuk persiapan sesi tatap muka (*
 
 | No | Modul Belajar | Fokus Materi | Bobot Nilai |
 |:---:|---|---|:---:|
+| **⭐** | [**TABEL_5_TAHAP_WORKFLOW.md**](../TABEL_5_TAHAP_WORKFLOW.md) | **Master Cheat Sheet:** 5 Tabel lengkap pemetaan *Event, State, Validation, Feedback, dan Navigation/Result* beserta baris kodenya. | **Rangkuman Eksekutif** |
 | **01** | [**01_DEMO_5_TAHAP_WORKFLOW.md**](./01_DEMO_5_TAHAP_WORKFLOW.md) | Skenario demo 1-2 menit, urutan alur 5 tahap wajib (*Input, State, Validation, Feedback, Result*), dan simulasi interaksi di HP. | **50%** (25% Workflow + 25% Fungsionalitas) |
 | **02** | [**02_BEDAH_KODE_DAN_ARSITEKTUR.md**](./02_BEDAH_KODE_DAN_ARSITEKTUR.md) | Penjelasan baris-per-baris kode di 4 file utama (*Model, ViewModel, View 1, View 2*) & bedah istilah teknis (*immutability, sound null safety, memory leak, ChangeNotifier*). | **30%** (Pemahaman & Analisis Kode) |
 | **03** | [**03_PENGUASAAN_TEORI_4_MODUL.md**](./03_PENGUASAAN_TEORI_4_MODUL.md) | Kaitan kode dengan materi perkuliahan Modul 1 (Mental Model), Modul 2 (OOP Dart), Modul 3 (MVVM), dan Modul 4 (State & Navigasi). | **25%** (Penguasaan Konsep & Materi) |
