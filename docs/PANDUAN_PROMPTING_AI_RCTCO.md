@@ -63,7 +63,7 @@ Aplikasi Flutter 'MyTeam' untuk mahasiswa Universitas Andalas. Bagian ini khusus
 Gunakan Dart & Flutter dengan Sound Null Safety, pertahankan arsitektur MVVM dan ChangeNotifier bawaan (jangan gunakan library eksternal/provider), dan jangan merusak unit test serta alur 1 Complete Workflow yang sudah ada.
 
 [EXPECTED OUTPUT]
-Hanya berikan potongan kode yang dimodifikasi (Before vs After) beserta nama file dan penjelasannya.
+Lakukan perubahan langsung pada widget terkait di file yang sedang dibuka, tanpa mengubah widget atau logika lainnya. (Tunjukkan diff perubahannya).
 
 [VALIDATION]
 Tangani edge cases (pengecekan null, string kosong, safe parsing) dan pastikan form validation serta memory management (dispose controller) tetap terjaga.
