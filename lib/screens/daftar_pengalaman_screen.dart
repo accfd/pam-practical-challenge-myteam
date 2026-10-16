@@ -36,13 +36,6 @@ class _DaftarPengalamanScreenState extends State<DaftarPengalamanScreen> {
     // 2. Menerima return data dan mutasi state di ViewModel
     if (result != null) {
       _viewModel.tambahPengalaman(result);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Berhasil menambahkan "${result.namaKegiatan}"!'),
-          backgroundColor: const Color(0xFF006400),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
     }
   }
 
